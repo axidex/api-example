@@ -3,18 +3,17 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/axidex/ss-manager/pkg/config_provider"
-	"os"
+	"github.com/axidex/api-example/internal/config"
+	"github.com/axidex/api-example/pkg/config_provider"
 )
 
 func (a *App) initConfig(_ context.Context) error {
-	configPath := os.Getenv("config")
+	configPath := ".env" // os.Getenv("config")
 
-	cfg, err := config_provider.ParseConfig[config.Config](configPath)
+	cfg, err := config_provider.ParseConfig[config.Config](configPath, config_provider.EnvConfig)
 	if err != nil {
 		return fmt.Errorf("can't parse config: %w", err)
 	}
-	config_provider.WaitSecrets(cfg.Secrets)
 
 	a.cfg = cfg
 	return nil

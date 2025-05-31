@@ -1,7 +1,11 @@
 package config
 
-import "github.com/axidex/ss-manager/pkg/telemetry"
+import (
+	"github.com/axidex/api-example/pkg/logger"
+	"github.com/axidex/api-example/pkg/telemetry"
+)
 
 type Config struct {
-	Telemetry telemetry.Config
+	Telemetry telemetry.Config `mapstructure:",squash"`
+	Logger    logger.Config    `mapstructure:",squash"`
 }

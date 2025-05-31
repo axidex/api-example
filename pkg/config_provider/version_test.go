@@ -1,7 +1,7 @@
 package config_provider_test
 
 import (
-	"github.com/axidex/ss-manager/pkg/config_provider"
+	"github.com/axidex/api-example/pkg/config_provider"
 	"testing"
 )
 

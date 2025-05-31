@@ -1,3 +1,22 @@
+BUILD_DATE := $(shell date -u +"%d.%m.%Y")
+BUILD_COMMIT := $(shell git rev-parse --short HEAD)
+BUILD_VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null || echo "N/A")
+VERSION_PACKAGE := "github.com/axidex/api-example/pkg/config_provider"
+
+build:
+	go build \
+		-ldflags="-s -w -X $(VERSION_PACKAGE).buildVersion=$(BUILD_VERSION) -X $(VERSION_PACKAGE).buildDate=$(BUILD_DATE) -X $(VERSION_PACKAGE).buildCommit=$(BUILD_COMMIT)" \
+		-o ./api_main cmd/main/main.go
+
+run:
+	go run \
+		-ldflags="-X $(VERSION_PACKAGE).buildVersion=$(BUILD_VERSION) -X $(VERSION_PACKAGE).buildDate=$(BUILD_DATE) -X $(VERSION_PACKAGE).buildCommit=$(BUILD_COMMIT)" \
+ 		cmd/main/main.go --debug
+
+tidy:
+	go mod tidy
+	go fmt ./...
+
 telemetry:
 	cd ./compose/telemetry && docker compose up -d
 

@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/axidex/ss-manager/internal/app"
+	"github.com/axidex/api-example/internal/app"
 )
 
 func main() {

@@ -5,16 +5,25 @@ receivers:
         endpoint: 0.0.0.0:4317
 
 processors:
+  batch: {}
+
 extensions:
   health_check: {}
+
 exporters:
   otlp:
     endpoint: jaeger:4317
     tls:
       insecure: true
+
   prometheus:
-    endpoint: "0.0.0.0:9090"
+    endpoint: "0.0.0.0:8889"
+
+  loki:
+    endpoint: "http://loki:3100/loki/api/v1/push"
+
 service:
+  extensions: [health_check]
   pipelines:
     traces:
       receivers: [otlp]
@@ -22,3 +31,7 @@ service:
     metrics:
       receivers: [otlp]
       exporters: [prometheus]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [loki]

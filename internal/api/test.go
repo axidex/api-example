@@ -20,7 +20,7 @@ func (h *GinHandler) Test(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	h.logger.Info(ctx, "Test endpoint")
-	time.Sleep(1 * time.Second)
+	time.Sleep(10 * time.Second)
 
 	c.JSON(http.StatusOK, "success")
 	return

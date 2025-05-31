@@ -13,6 +13,12 @@ type Telemetry interface {
 	GetLoggerProvider() *log.LoggerProvider
 	GetMeterProvider() *metric.MeterProvider
 	GetTracerProvider() *trace.TracerProvider
+
+	TraceStart(ctx context.Context, name string) (context.Context, oteltracer.Span)
+
+	MeterInt64Histogram(metric Metric) (otelmetric.Int64Histogram, error)
+	MeterInt64UpDownCounter(metric Metric) (otelmetric.Int64UpDownCounter, error)
+
 	Stop(ctx context.Context)
 }
 

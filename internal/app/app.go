@@ -87,7 +87,16 @@ func (a *App) testLog(ctx context.Context) {
 	ctx, span := a.telemetry.GetTracerProvider().Tracer("test").Start(ctx, "test.logs")
 	defer span.End()
 	a.logger.Info(ctx, "Test logs - %d", 10)
+	a.qwe(ctx)
+
 	time.Sleep(10 * time.Second)
+}
+
+func (a *App) qwe(ctx context.Context) {
+	ctx, span := a.telemetry.GetTracerProvider().Tracer("internal").Start(ctx, "internal.qwe")
+	defer span.End()
+
+	a.logger.Info(ctx, "Internal test logs - %d", 10)
 }
 
 func (a *App) stop() {

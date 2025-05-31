@@ -18,7 +18,6 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-// ZapLogger Logger
 type ZapLogger struct {
 	cfg         Config
 	sugarLogger *zap.SugaredLogger
@@ -58,15 +57,11 @@ func (l *ZapLogger) getLoggerLevel(cfg Config) zapcore.Level {
 
 // CustomTimeEncoder Custom time encoder
 func CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.UTC().Format("2006-01-02T15:04:05.000-07:00"))
-}
-
-func RFC832() string {
-	return "Mon, 02 Jan 2006 15:04:05 -0700"
+	enc.AppendString(t.UTC().Format(RFC3339))
 }
 
 func RFC832TimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.UTC().Format(RFC832()))
+	enc.AppendString(t.UTC().Format(RFC832))
 }
 
 // CustomLevelEncoder Custom level encoder with uppercase
@@ -126,9 +121,10 @@ func (l *ZapLogger) withCtx(ctx context.Context) *zap.Logger {
 	if !spanCtx.IsValid() {
 		return l.rawLogger
 	}
+
 	return l.rawLogger.With(
-		zap.String("traceId", spanCtx.TraceID().String()),
-		zap.String("spanId", spanCtx.SpanID().String()),
+		zap.String("trace_id", spanCtx.TraceID().String()),
+		zap.String("span_id", spanCtx.SpanID().String()),
 	)
 }
 

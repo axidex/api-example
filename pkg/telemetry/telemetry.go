@@ -16,12 +16,6 @@ type Telemetry interface {
 	Stop(ctx context.Context)
 }
 
-type Config struct {
-	TraceCollector  string `mapstructure:"TELEMETRY_TRACE_COLLECTOR"`
-	MetricCollector string `mapstructure:"TELEMETRY_METRIC_COLLECTOR"`
-	LogCollector    string `mapstructure:"TELEMETRY_LOG_COLLECTOR"`
-}
-
 type OpenTelemetry struct {
 	lp     *log.LoggerProvider
 	mp     *metric.MeterProvider

@@ -17,6 +17,9 @@ tidy:
 	go mod tidy
 	go fmt ./...
 
+swag:
+	swag init -g cmd/main/main.go
+
 telemetry:
 	cd ./compose/telemetry && docker compose up -d
 

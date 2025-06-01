@@ -1,17 +1,20 @@
 package config_provider
 
-import "reflect"
+import (
+	"context"
+	"reflect"
+)
 
 type Infoer interface {
 	Info() string
 }
 
-func PrintInfo(s interface{}, printFunc func(s string, args ...interface{})) {
+func PrintInfo(s interface{}, printFunc func(ctx context.Context, s string, args ...interface{})) {
 	printVersion(printFunc)
 	printInfoers(s, printFunc)
 }
 
-func printInfoers(s interface{}, printFunc func(s string, args ...interface{})) {
+func printInfoers(s interface{}, printFunc func(ctx context.Context, s string, args ...interface{})) {
 	val := reflect.ValueOf(s)
 	if val.Kind() == reflect.Ptr {
 		val = val.Elem()
@@ -28,7 +31,7 @@ func printInfoers(s interface{}, printFunc func(s string, args ...interface{})) 
 
 		// Проверяем, реализует ли поле интерфейс Infoer
 		if info, ok := field.Interface().(Infoer); ok {
-			printFunc(info.Info())
+			printFunc(context.Background(), info.Info())
 		}
 
 		// Рекурсивно проверяем вложенные структуры
@@ -38,7 +41,7 @@ func printInfoers(s interface{}, printFunc func(s string, args ...interface{})) 
 	}
 }
 
-func printVersion(printFunc func(s string, args ...interface{})) {
+func printVersion(printFunc func(ctx context.Context, s string, args ...interface{})) {
 	version := NewVersion()
-	printFunc("Build info: Version - %s, Date - %s, Commit - %s", version.Version(), version.Date(), version.Commit())
+	printFunc(context.Background(), "Build info: Version - %s, Date - %s, Commit - %s", version.Version(), version.Date(), version.Commit())
 }

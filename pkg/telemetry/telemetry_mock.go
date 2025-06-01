@@ -2,10 +2,12 @@ package telemetry
 
 import (
 	"context"
+	otelmetric "go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/sdk/log"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/resource"
 	"go.opentelemetry.io/otel/sdk/trace"
+	oteltracer "go.opentelemetry.io/otel/trace"
 )
 
 type MockTelemetry struct {
@@ -47,6 +49,18 @@ func (t *MockTelemetry) GetMeterProvider() *metric.MeterProvider {
 
 func (t *MockTelemetry) GetTracerProvider() *trace.TracerProvider {
 	return t.tp
+}
+
+func (t *MockTelemetry) TraceStart(ctx context.Context, name string) (context.Context, oteltracer.Span) {
+	return nil, nil
+}
+
+func (t *MockTelemetry) MeterInt64UpDownCounter(metric Metric) (otelmetric.Int64UpDownCounter, error) {
+	return nil, nil
+}
+
+func (t *MockTelemetry) MeterInt64Histogram(metric Metric) (otelmetric.Int64Histogram, error) {
+	return nil, nil
 }
 
 func (t *MockTelemetry) Stop(context.Context) {}

@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/axidex/api-example/pkg/telemetry"
 	"github.com/gin-gonic/gin"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/semconv/v1.20.0/httpconv"
 	"time"
 )
 
@@ -30,7 +30,9 @@ func (h *GinHandler) MeterRequestDuration() gin.HandlerFunc {
 			c.Request.Context(),
 			duration.Milliseconds(),
 			metric.WithAttributes(
-				httpconv.ServerRequest(h.name, c.Request)...,
+				attribute.String("http.method", c.Request.Method),
+				attribute.String("http.path", c.Request.URL.Path),
+				attribute.String("http.host", c.Request.Host),
 			),
 		)
 	}
@@ -46,8 +48,11 @@ func (h *GinHandler) MeterRequestsInFlight() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		// define metric attributes
-		attrs := metric.WithAttributes(httpconv.ServerRequest(h.name, c.Request)...)
-
+		attrs := metric.WithAttributes(
+			attribute.String("http.method", c.Request.Method),
+			attribute.String("http.path", c.Request.URL.Path),
+			attribute.String("http.host", c.Request.Host),
+		)
 		// increase the number of requests in flight
 		counter.Add(c.Request.Context(), 1, attrs)
 

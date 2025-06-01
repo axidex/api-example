@@ -31,7 +31,7 @@ func NewGinHandler(name string, config Config, logger logger.Logger, telemetry t
 func (h *GinHandler) InitRoutes() *gin.Engine {
 	router := gin.New()
 	router.Use(otelgin.Middleware(h.name, otelgin.WithMeterProvider(h.telemetry.GetMeterProvider()), otelgin.WithTracerProvider(h.telemetry.GetTracerProvider())))
-	router.Use(h.MeterRequestDuration(), h.MeterRequestsInFlight())
+	router.Use(h.MeterRequestsInFlight())
 
 	loggerMiddleware := NewLoggerMiddleware(h.logger)
 	router.Use(CustomRecoveryFunc(h.logger))
@@ -42,6 +42,7 @@ func (h *GinHandler) InitRoutes() *gin.Engine {
 	{
 		v1.Use(loggerMiddleware.Default())
 		v1.GET("/test", h.Test)
+		v1.GET("/test-error", h.TestError)
 
 	}
 

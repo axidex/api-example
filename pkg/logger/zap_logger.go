@@ -2,26 +2,23 @@ package logger
 
 import (
 	"context"
-	"fmt"
-	"github.com/axidex/api-example/pkg/config_provider"
+	"github.com/axidex/api-example/pkg/version"
 	"go.opentelemetry.io/contrib/bridges/otelzap"
 	"go.opentelemetry.io/otel/sdk/log"
 	"go.opentelemetry.io/otel/trace"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
 	"strings"
-	"syscall"
 	"time"
 
-	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
 type ZapLogger struct {
-	cfg         Config
-	sugarLogger *zap.SugaredLogger
-	rawLogger   *zap.Logger
+	cfg       Config
+	rawLogger *zap.Logger
+	//sugarLogger *zap.SugaredLogger
 }
 
 func NewZapLogger(cfg Config, serviceName string, lp *log.LoggerProvider) (Logger, error) {
@@ -101,7 +98,7 @@ func (l *ZapLogger) InitLogger(lp *log.LoggerProvider, serviceName string) {
 			Compress:   l.cfg.Rotation.Compress, // disabled by default
 		}), zap.NewAtomicLevelAt(logLevel)),
 		zapcore.NewCore(encoder, zapcore.AddSync(zapcore.Lock(os.Stdout)), zap.NewAtomicLevelAt(logLevel)),
-		otelzap.NewCore(serviceName, otelzap.WithLoggerProvider(lp), otelzap.WithVersion(config_provider.NewVersion().Version())),
+		otelzap.NewCore(serviceName, otelzap.WithLoggerProvider(lp), otelzap.WithVersion(version.NewVersion().Version())),
 	}
 
 	core := zapcore.NewTee(cores...)
@@ -109,45 +106,49 @@ func (l *ZapLogger) InitLogger(lp *log.LoggerProvider, serviceName string) {
 
 	l.rawLogger = rawLogger
 
-	l.sugarLogger = l.rawLogger.Sugar()
-	err := l.sugarLogger.Sync()
-	if err != nil && !errors.Is(err, syscall.ENOTTY) && !errors.Is(err, syscall.EINVAL) {
-		l.sugarLogger.Error(err)
-	}
+	//l.sugarLogger = l.rawLogger.Sugar()
+	//err := l.sugarLogger.Sync()
+	//if err != nil && !errors.Is(err, syscall.ENOTTY) && !errors.Is(err, syscall.EINVAL) {
+	//	l.sugarLogger.Error(err)
+	//}
 }
 
 func (l *ZapLogger) withCtx(ctx context.Context) *zap.Logger {
+	return withTrace(l.rawLogger, ctx)
+}
+
+func withTrace(logger *zap.Logger, ctx context.Context) *zap.Logger {
 	spanCtx := trace.SpanContextFromContext(ctx)
 	if !spanCtx.IsValid() {
-		return l.rawLogger
+		return logger
 	}
 
-	return l.rawLogger.With(
+	return logger.With(
 		zap.String("trace_id", spanCtx.TraceID().String()),
 		zap.String("span_id", spanCtx.SpanID().String()),
 	)
 }
 
-func (l *ZapLogger) Trace(ctx context.Context, msg string, args ...interface{}) {
-	l.withCtx(ctx).Debug(fmt.Sprintf(msg, args...))
+func (l *ZapLogger) Trace(ctx context.Context, msg string, attrs ...Attribute) {
+	l.withCtx(ctx).Debug(msg, transformAttributes(attrs)...)
 }
 
-func (l *ZapLogger) Debug(ctx context.Context, msg string, args ...interface{}) {
-	l.withCtx(ctx).Debug(fmt.Sprintf(msg, args...))
+func (l *ZapLogger) Debug(ctx context.Context, msg string, attrs ...Attribute) {
+	l.withCtx(ctx).Debug(msg, transformAttributes(attrs)...)
 }
 
-func (l *ZapLogger) Info(ctx context.Context, msg string, args ...interface{}) {
-	l.withCtx(ctx).Info(fmt.Sprintf(msg, args...))
+func (l *ZapLogger) Info(ctx context.Context, msg string, attrs ...Attribute) {
+	l.withCtx(ctx).Info(msg, transformAttributes(attrs)...)
 }
 
-func (l *ZapLogger) Warn(ctx context.Context, msg string, args ...interface{}) {
-	l.withCtx(ctx).Warn(fmt.Sprintf(msg, args...))
+func (l *ZapLogger) Warn(ctx context.Context, msg string, attrs ...Attribute) {
+	l.withCtx(ctx).Warn(msg, transformAttributes(attrs)...)
 }
 
-func (l *ZapLogger) Error(ctx context.Context, msg string, args ...interface{}) {
-	l.withCtx(ctx).Error(fmt.Sprintf(msg, args...))
+func (l *ZapLogger) Error(ctx context.Context, msg string, attrs ...Attribute) {
+	l.withCtx(ctx).Error(msg, transformAttributes(attrs)...)
 }
 
-func (l *ZapLogger) Fatal(ctx context.Context, msg string, args ...interface{}) {
-	l.withCtx(ctx).Fatal(fmt.Sprintf(msg, args...))
+func (l *ZapLogger) Fatal(ctx context.Context, msg string, attrs ...Attribute) {
+	l.withCtx(ctx).Fatal(msg, transformAttributes(attrs)...)
 }

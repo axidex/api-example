@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"github.com/axidex/api-example/pkg/telemetry"
 	"github.com/gin-gonic/gin"
 	"go.opentelemetry.io/otel/attribute"
@@ -14,7 +15,7 @@ func (h *GinHandler) MeterRequestDuration() gin.HandlerFunc {
 	// init metric, here we are using histogram for capturing request duration
 	histogram, err := h.telemetry.MeterInt64Histogram(telemetry.MetricRequestDurationMillis)
 	if err != nil {
-		h.logger.Error(context.Background(), "Failed to create histogram: %w", err)
+		h.logger.Error(context.Background(), fmt.Sprintf("Failed to create histogram: %s", err))
 	}
 
 	return func(c *gin.Context) {
@@ -43,7 +44,7 @@ func (h *GinHandler) MeterRequestsInFlight() gin.HandlerFunc {
 	// init metric, here we are using counter for capturing request in flight
 	counter, err := h.telemetry.MeterInt64UpDownCounter(telemetry.MetricRequestsInFlight)
 	if err != nil {
-		h.logger.Info(context.Background(), "Failed to create counter: %w", err)
+		h.logger.Info(context.Background(), fmt.Sprintf("Failed to create counter: %s", err))
 	}
 
 	return func(c *gin.Context) {

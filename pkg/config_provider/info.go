@@ -2,6 +2,9 @@ package config_provider
 
 import (
 	"context"
+	"fmt"
+	"github.com/axidex/api-example/pkg/logger"
+	"github.com/axidex/api-example/pkg/version"
 	"reflect"
 )
 
@@ -9,12 +12,12 @@ type Infoer interface {
 	Info() string
 }
 
-func PrintInfo(s interface{}, printFunc func(ctx context.Context, s string, args ...interface{})) {
+func PrintInfo(s interface{}, printFunc func(ctx context.Context, s string, attrs ...logger.Attribute)) {
 	printVersion(printFunc)
 	printInfoers(s, printFunc)
 }
 
-func printInfoers(s interface{}, printFunc func(ctx context.Context, s string, args ...interface{})) {
+func printInfoers(s interface{}, printFunc func(ctx context.Context, s string, attrs ...logger.Attribute)) {
 	val := reflect.ValueOf(s)
 	if val.Kind() == reflect.Ptr {
 		val = val.Elem()
@@ -41,7 +44,7 @@ func printInfoers(s interface{}, printFunc func(ctx context.Context, s string, a
 	}
 }
 
-func printVersion(printFunc func(ctx context.Context, s string, args ...interface{})) {
-	version := NewVersion()
-	printFunc(context.Background(), "Build info: Version - %s, Date - %s, Commit - %s", version.Version(), version.Date(), version.Commit())
+func printVersion(printFunc func(ctx context.Context, s string, attrs ...logger.Attribute)) {
+	v := version.NewVersion()
+	printFunc(context.Background(), fmt.Sprintf("Build info: Version - %s, Date - %s, Commit - %s", v.Version(), v.Date(), v.Commit()))
 }

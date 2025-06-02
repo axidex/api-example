@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/axidex/api-example/internal/api"
 	"github.com/axidex/api-example/internal/config"
+	"github.com/axidex/api-example/internal/provider"
 	"github.com/axidex/api-example/pkg/config_provider"
 	"github.com/axidex/api-example/pkg/logger"
 	"github.com/axidex/api-example/pkg/telemetry"
@@ -18,11 +19,12 @@ type IApp interface {
 }
 
 type App struct {
-	handler   *api.GinHandler
-	telemetry telemetry.Telemetry
-	cfg       *config.Config
-	logger    logger.Logger
-	name      string
+	handler      *api.GinHandler
+	telemetry    telemetry.Telemetry
+	dependencies *provider.Dependencies
+	cfg          *config.Config
+	logger       logger.Logger
+	name         string
 }
 
 func NewApp() IApp {
@@ -54,6 +56,7 @@ func (a *App) init(ctx context.Context) error {
 		a.initName,
 		a.initTelemetry,
 		a.initLogger,
+		a.initDependencies,
 		a.initHandler,
 	}
 

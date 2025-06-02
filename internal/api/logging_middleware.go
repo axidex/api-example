@@ -79,11 +79,11 @@ func (m *LoggerMiddleware) LogErrors(ctx context.Context, request RequestInfo, l
 			ctx,
 			"REQUEST FAILED",
 			logger.NewAttribute("path", request.path),
-			logger.NewAttribute("statusCode", request.statusCode),
+			logger.NewAttribute("status_code", request.statusCode),
 			logger.NewAttribute("method", request.method),
-			logger.NewAttribute("clientIP", request.clientIP),
+			logger.NewAttribute("client_ip", request.clientIP),
 			logger.NewAttribute("latency", request.latency),
-			logger.NewAttribute("errorMsg", errorMsg),
+			logger.NewAttribute("error_msg", errorMsg),
 		)
 	}
 }
@@ -93,9 +93,9 @@ func (m *LoggerMiddleware) LogInfo(ctx context.Context, request RequestInfo, log
 		ctx,
 		"REQUEST INFO",
 		logger.NewAttribute("path", request.path),
-		logger.NewAttribute("statusCode", request.statusCode),
+		logger.NewAttribute("status_code", request.statusCode),
 		logger.NewAttribute("method", request.method),
-		logger.NewAttribute("clientIP", request.clientIP),
+		logger.NewAttribute("client_ip", request.clientIP),
 		logger.NewAttribute("latency", request.latency),
 	)
 }

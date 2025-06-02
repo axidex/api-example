@@ -15,7 +15,7 @@ func CustomRecoveryFunc(l logger.Logger) gin.HandlerFunc {
 			logger.NewAttribute("info", recovered),
 			logger.NewAttribute("path", c.Request.URL.Path),
 			logger.NewAttribute("method", c.Request.Method),
-			logger.NewAttribute("ip", c.ClientIP()),
+			logger.NewAttribute("client_ip", c.ClientIP()),
 		)
 
 		// Abort the request and return a 500 Internal Server Error

@@ -1,7 +1,7 @@
 BUILD_DATE := $(shell date -u +"%d.%m.%Y")
 BUILD_COMMIT := $(shell git rev-parse --short HEAD)
 BUILD_VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null || echo "N/A")
-VERSION_PACKAGE := "github.com/axidex/api-example/pkg/config_provider"
+VERSION_PACKAGE := "github.com/axidex/api-example/pkg/version"
 
 build:
 	go build \

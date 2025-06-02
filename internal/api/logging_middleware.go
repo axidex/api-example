@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-type LoggingFunc func(ctx context.Context, msg string, args ...interface{})
+type LoggingFunc func(ctx context.Context, msg string, args ...logger.Attribute)
 
 type RequestInfo struct {
 	path       string
@@ -77,13 +77,13 @@ func (m *LoggerMiddleware) LogErrors(ctx context.Context, request RequestInfo, l
 	for _, errorMsg := range request.errors {
 		logging(
 			ctx,
-			"path: %s | statusCode: %d | method: %s | clientIP: %s | latency: %s | errorMsg: %s",
-			request.path,
-			request.statusCode,
-			request.method,
-			request.clientIP,
-			request.latency.String(),
-			errorMsg,
+			"REQUEST FAILED",
+			logger.NewAttribute("path", request.path),
+			logger.NewAttribute("status_code", request.statusCode),
+			logger.NewAttribute("method", request.method),
+			logger.NewAttribute("client_ip", request.clientIP),
+			logger.NewAttribute("latency", request.latency),
+			logger.NewAttribute("error_msg", errorMsg),
 		)
 	}
 }
@@ -91,11 +91,11 @@ func (m *LoggerMiddleware) LogErrors(ctx context.Context, request RequestInfo, l
 func (m *LoggerMiddleware) LogInfo(ctx context.Context, request RequestInfo, logging LoggingFunc) {
 	logging(
 		ctx,
-		"path: %s | statusCode: %d | method: %s | clientIP: %s | latency: %s",
-		request.path,
-		request.statusCode,
-		request.method,
-		request.clientIP,
-		request.latency.String(),
+		"REQUEST INFO",
+		logger.NewAttribute("path", request.path),
+		logger.NewAttribute("status_code", request.statusCode),
+		logger.NewAttribute("method", request.method),
+		logger.NewAttribute("client_ip", request.clientIP),
+		logger.NewAttribute("latency", request.latency),
 	)
 }

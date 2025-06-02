@@ -57,7 +57,7 @@ func (h *GinHandler) InitRoutes() *gin.Engine {
 
 func (h *GinHandler) listRoutes(router *gin.Engine) {
 	for _, route := range router.Routes() {
-		h.logger.Info(context.Background(), "Method: %s | Path: %s | Handler: %s", route.Method, route.Path, route.Handler)
+		h.logger.Info(context.Background(), fmt.Sprintf("Method: %s | Path: %s | Handler: %s", route.Method, route.Path, route.Handler))
 	}
 }
 
@@ -78,6 +78,6 @@ func (h *GinHandler) HandleServer(ctx context.Context) (func() error, func(error
 		},
 		func(err error) {
 			cancel()
-			h.logger.Warn(ctx, "Shutting down server: %s", err)
+			h.logger.Warn(ctx, fmt.Sprintf("Shutting down server: %s", err))
 		}
 }

@@ -7,15 +7,15 @@ import (
 )
 
 // CustomRecoveryFunc is a custom recovery function
-func CustomRecoveryFunc(logger logger.Logger) gin.HandlerFunc {
+func CustomRecoveryFunc(l logger.Logger) gin.HandlerFunc {
 	return gin.CustomRecovery(func(c *gin.Context, recovered interface{}) {
-		logger.Error(
+		l.Error(
 			c.Request.Context(),
-			"Panic recovered | %v | path: %s | method: %s | ip: %s",
-			recovered,
-			c.Request.URL.Path,
-			c.Request.Method,
-			c.ClientIP(),
+			"Panic recovered",
+			logger.NewAttribute("info", recovered),
+			logger.NewAttribute("path", c.Request.URL.Path),
+			logger.NewAttribute("method", c.Request.Method),
+			logger.NewAttribute("client_ip", c.ClientIP()),
 		)
 
 		// Abort the request and return a 500 Internal Server Error

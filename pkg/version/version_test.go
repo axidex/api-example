@@ -1,7 +1,7 @@
-package config_provider_test
+package version_test
 
 import (
-	"github.com/axidex/api-example/pkg/config_provider"
+	"github.com/axidex/api-example/pkg/version"
 	"testing"
 )
 
@@ -10,21 +10,21 @@ func TestVersionMethods(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		version     config_provider.Version
+		version     version.Version
 		wantVersion string
 		wantDate    string
 		wantCommit  string
 	}{
 		{
 			name:        "Default BuildVersion",
-			version:     config_provider.NewVersion(),
+			version:     version.NewVersion(),
 			wantVersion: "N/A",
 			wantDate:    "N/A",
 			wantCommit:  "N/A",
 		},
 		{
 			name: "Custom BuildVersion",
-			version: &config_provider.BuildVersion{
+			version: &version.BuildVersion{
 				BuildVersion: "v1.2.3",
 				BuildDate:    "02.03.2025",
 				BuildCommit:  "abcd1234",

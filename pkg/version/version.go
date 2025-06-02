@@ -1,4 +1,4 @@
-package config_provider
+package version
 
 var (
 	// buildVersion is the application build version, example: v1.0.0.

@@ -23,7 +23,6 @@ func (h *GinHandler) Test(c *gin.Context) {
 	time.Sleep(10 * time.Second)
 
 	c.JSON(http.StatusOK, "success")
-	return
 }
 
 // TestError
@@ -43,5 +42,4 @@ func (h *GinHandler) TestError(c *gin.Context) {
 	time.Sleep(5 * time.Second)
 
 	c.JSON(http.StatusBadRequest, "failed")
-	return
 }

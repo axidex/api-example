@@ -18,6 +18,9 @@ tidy:
 	go mod tidy
 	go fmt ./...
 
+lint:
+	golangci-lint run ./...
+
 swag:
 	swag init -g cmd/main/main.go
 
@@ -34,7 +37,6 @@ telemetry-down:
 	cd ./compose/telemetry && docker compose down
 
 telemetry-restart: telemetry-down telemetry
-
 
 # DB Docker Compose
 db:

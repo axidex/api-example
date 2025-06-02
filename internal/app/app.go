@@ -23,7 +23,6 @@ type App struct {
 	cfg       *config.Config
 	logger    logger.Logger
 	name      string
-	debug     bool
 }
 
 func NewApp() IApp {

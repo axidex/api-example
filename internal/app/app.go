@@ -72,5 +72,6 @@ func (a *App) init(ctx context.Context) error {
 }
 
 func (a *App) stop() {
+	a.dependencies.Stop()
 	a.telemetry.Stop(context.Background())
 }

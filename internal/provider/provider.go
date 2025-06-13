@@ -7,7 +7,7 @@ import (
 	"github.com/axidex/api-example/pkg/logger"
 )
 
-type IServiceProvider interface {
+type IDependenciesProvider interface {
 	InitDependencies(ctx context.Context) error
 	GetDependencies() *Dependencies
 }
@@ -19,13 +19,14 @@ type Provider struct {
 	debug        bool
 }
 
-func NewServiceProvider(cfg *config.Config, logger logger.Logger) IServiceProvider {
+func NewServiceProvider(cfg *config.Config, logger logger.Logger) IDependenciesProvider {
 	return &Provider{cfg: cfg, logger: logger}
 }
 
-func (s *Provider) InitDependencies(ctx context.Context) error {
-	inits := map[string]initFunc{}
-
+func (p *Provider) InitDependencies(ctx context.Context) error {
+	inits := map[string]initFunc{
+		"database": p.initDatabase,
+	}
 	for name, init := range inits {
 		if err := init(ctx); err != nil {
 			return fmt.Errorf("error got in %s: %w", name, err)
@@ -35,6 +36,6 @@ func (s *Provider) InitDependencies(ctx context.Context) error {
 	return nil
 }
 
-func (s *Provider) GetDependencies() *Dependencies {
-	return &s.dependencies
+func (p *Provider) GetDependencies() *Dependencies {
+	return &p.dependencies
 }

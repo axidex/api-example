@@ -57,6 +57,7 @@ func (a *App) init(ctx context.Context) error {
 		a.initTelemetry,
 		a.initLogger,
 		a.initDependencies,
+		a.initStorage,
 		a.initHandler,
 	}
 

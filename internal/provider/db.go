@@ -11,7 +11,7 @@ func (p *Provider) initDatabase(_ context.Context) error {
 		return err
 	}
 
-	p.dependencies.db = psqlEngine
+	p.dependencies.DB = psqlEngine
 
 	return nil
 }

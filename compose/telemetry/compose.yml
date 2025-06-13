@@ -39,14 +39,14 @@ services:
       - api-example
     command: ["-config.file=/etc/loki/local-config.yaml"]
     ports:
-      - "3100:3100"
+      - "5051:3100"
 
   grafana:
     image: grafana/grafana:latest
     networks:
       - api-example
     ports:
-      - "3000:3000"
+      - "5050:3000"
     volumes:
       - grafana-storage:/var/lib/grafana
     depends_on:

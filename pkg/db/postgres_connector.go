@@ -1,4 +1,4 @@
-package postgres
+package db
 
 import (
 	"fmt"
@@ -9,8 +9,8 @@ import (
 )
 
 type Config struct {
-	Credentials Credentials `json:"credentials"`
-	Connection  Connection  `json:"connection"`
+	Credentials Credentials `mapstructure:",squash"`
+	Connection  Connection  `mapstructure:",squash"`
 }
 
 type Credentials struct {
@@ -33,7 +33,6 @@ func (c Connection) Info() string {
 	)
 }
 
-// NewPostgresConnection Return new Postgresql db instance
 func NewPostgresConnection(config Config, logger logger.Logger) (*gorm.DB, error) {
 	dataSourceName := fmt.Sprintf("postgres://%s:%s@%s/%s?%s",
 		config.Credentials.Username,

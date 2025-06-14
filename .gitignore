@@ -11,3 +11,6 @@ docs/swagger.yaml
 
 # IDE settings
 .idea
+
+# Docker volumes
+compose/db/postgres_data

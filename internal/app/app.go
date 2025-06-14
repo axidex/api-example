@@ -4,10 +4,13 @@ import (
 	"context"
 	"github.com/axidex/api-example/internal/api"
 	"github.com/axidex/api-example/internal/config"
+	"github.com/axidex/api-example/internal/provider"
+	"github.com/axidex/api-example/internal/storage"
 	"github.com/axidex/api-example/pkg/config_provider"
 	"github.com/axidex/api-example/pkg/logger"
 	"github.com/axidex/api-example/pkg/telemetry"
 	"github.com/oklog/run"
+
 	"syscall"
 )
 
@@ -18,12 +21,13 @@ type IApp interface {
 }
 
 type App struct {
-	handler   *api.GinHandler
-	telemetry telemetry.Telemetry
-	cfg       *config.Config
-	logger    logger.Logger
-	name      string
-	debug     bool
+	handler      *api.GinHandler
+	storage      storage.ApiStorage
+	telemetry    telemetry.Telemetry
+	dependencies *provider.Dependencies
+	cfg          *config.Config
+	logger       logger.Logger
+	name         string
 }
 
 func NewApp() IApp {
@@ -55,6 +59,8 @@ func (a *App) init(ctx context.Context) error {
 		a.initName,
 		a.initTelemetry,
 		a.initLogger,
+		a.initDependencies,
+		a.initStorage,
 		a.initHandler,
 	}
 
@@ -70,5 +76,6 @@ func (a *App) init(ctx context.Context) error {
 }
 
 func (a *App) stop() {
+	a.dependencies.Stop()
 	a.telemetry.Stop(context.Background())
 }

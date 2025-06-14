@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/axidex/api-example/internal/config"
 	"github.com/axidex/api-example/pkg/logger"
+	"github.com/axidex/api-example/pkg/telemetry"
 )
 
 type IDependenciesProvider interface {
@@ -16,11 +17,12 @@ type Provider struct {
 	dependencies Dependencies
 	cfg          *config.Config
 	logger       logger.Logger
+	telemetry    telemetry.Telemetry
 	debug        bool
 }
 
-func NewServiceProvider(cfg *config.Config, logger logger.Logger) IDependenciesProvider {
-	return &Provider{cfg: cfg, logger: logger}
+func NewServiceProvider(cfg *config.Config, logger logger.Logger, telemetry telemetry.Telemetry) IDependenciesProvider {
+	return &Provider{cfg: cfg, logger: logger, telemetry: telemetry}
 }
 
 func (p *Provider) InitDependencies(ctx context.Context) error {

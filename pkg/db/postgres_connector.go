@@ -5,7 +5,6 @@ import (
 	"github.com/axidex/api-example/pkg/logger"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/plugin/opentelemetry/tracing"
 )
 
 type Config struct {
@@ -33,7 +32,7 @@ func (c Connection) Info() string {
 	)
 }
 
-func NewPostgresConnection(config Config, logger logger.Logger) (*gorm.DB, error) {
+func NewGormConnection(config Config, logger logger.Logger) (*gorm.DB, error) {
 	dataSourceName := fmt.Sprintf("postgres://%s:%s@%s/%s?%s",
 		config.Credentials.Username,
 		config.Credentials.Password,
@@ -47,10 +46,6 @@ func NewPostgresConnection(config Config, logger logger.Logger) (*gorm.DB, error
 	db, err := gorm.Open(postgres.New(postgres.Config{DSN: dataSourceName, PreferSimpleProtocol: true}), &logConfig)
 	if err != nil {
 		return nil, fmt.Errorf("can't create postgres connection: %w", err)
-	}
-
-	if err := db.Use(tracing.NewPlugin()); err != nil {
-		return nil, fmt.Errorf("can't create tracing for gorm: %w", err)
 	}
 
 	return db, nil

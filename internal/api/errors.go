@@ -1,0 +1,22 @@
+package api
+
+import (
+	"github.com/axidex/api-example/internal/errors"
+	"github.com/axidex/api-example/pkg/db"
+	"net/http"
+)
+
+var ErrorsStatusCodes = map[error]int{
+	db.ErrRecordNotFound:           http.StatusNotFound,
+	errors.ErrInvalidRequestParams: http.StatusUnprocessableEntity,
+}
+
+// GetErrorResponse return status code and error info
+func GetErrorResponse(err error) (int, string) {
+	code, ok := ErrorsStatusCodes[err]
+	if !ok {
+		return http.StatusInternalServerError, "Internal Server Error"
+	}
+
+	return code, err.Error()
+}

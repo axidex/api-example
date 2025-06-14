@@ -5,10 +5,12 @@ import (
 	"github.com/axidex/api-example/internal/api"
 	"github.com/axidex/api-example/internal/config"
 	"github.com/axidex/api-example/internal/provider"
+	"github.com/axidex/api-example/internal/storage"
 	"github.com/axidex/api-example/pkg/config_provider"
 	"github.com/axidex/api-example/pkg/logger"
 	"github.com/axidex/api-example/pkg/telemetry"
 	"github.com/oklog/run"
+
 	"syscall"
 )
 
@@ -20,6 +22,7 @@ type IApp interface {
 
 type App struct {
 	handler      *api.GinHandler
+	storage      storage.ApiStorage
 	telemetry    telemetry.Telemetry
 	dependencies *provider.Dependencies
 	cfg          *config.Config

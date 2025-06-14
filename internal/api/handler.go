@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	_ "github.com/axidex/api-example/docs"
+	"github.com/axidex/api-example/internal/controller"
 	"github.com/axidex/api-example/pkg/logger"
 	"github.com/axidex/api-example/pkg/telemetry"
 	"github.com/gin-gonic/gin"
@@ -11,20 +12,22 @@ import (
 )
 
 type GinHandler struct {
-	name      string
-	config    Config
-	logger    logger.Logger
-	telemetry telemetry.Telemetry
+	name       string
+	config     Config
+	logger     logger.Logger
+	telemetry  telemetry.Telemetry
+	controller controller.Controller
 }
 
-func NewGinHandler(name string, config Config, logger logger.Logger, telemetry telemetry.Telemetry) *GinHandler {
+func NewGinHandler(name string, config Config, logger logger.Logger, telemetry telemetry.Telemetry, controller controller.Controller) *GinHandler {
 	gin.SetMode(gin.ReleaseMode)
 
 	return &GinHandler{
-		name:      name,
-		config:    config,
-		logger:    logger,
-		telemetry: telemetry,
+		name:       name,
+		config:     config,
+		logger:     logger,
+		telemetry:  telemetry,
+		controller: controller,
 	}
 }
 
@@ -43,6 +46,9 @@ func (h *GinHandler) InitRoutes() *gin.Engine {
 		v1.Use(loggerMiddleware.Default())
 		v1.GET("/test", h.Test)
 		v1.GET("/test-error", h.TestError)
+
+		v1.GET("/user", h.GetUser)
+		v1.POST("/user", h.CreateUser)
 
 	}
 

@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"github.com/axidex/api-example/internal/storage"
 	"github.com/axidex/api-example/pkg/migrations"
 	"gorm.io/gorm"
 )
@@ -15,6 +16,8 @@ func (a *App) initStorage(ctx context.Context) error {
 	); err != nil {
 		return err
 	}
+
+	a.storage = storage.NewApiStorage(a.dependencies.DB)
 
 	return nil
 }

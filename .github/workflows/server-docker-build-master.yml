@@ -7,9 +7,18 @@ on:
     tags:
       - '*'
 
+  pull_request:
+    branches:
+      - main
+      - 'feature/**'
+
 jobs:
+  call-ci:
+    uses: ./.github/workflows/go-ci.yml
   build-server:
     runs-on: ubuntu-latest
+    needs:
+      - call-ci
     defaults:
       run:
         working-directory: server

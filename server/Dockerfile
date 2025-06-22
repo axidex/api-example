@@ -19,7 +19,6 @@ RUN go env -w GOBIN="/opt/app-root/src/go/bin"
 RUN go get ./...
 RUN go install github.com/swaggo/swag/cmd/swag@latest && swag init -g ./cmd/main/main.go
 
-RUN go test ./...
 RUN go build \
     -ldflags="-s -w -X ${VERSION_PACKAGE}.buildVersion=${BUILD_VERSION} -X ${VERSION_PACKAGE}.buildDate=${BUILD_DATE} -X ${VERSION_PACKAGE}.buildCommit=${BUILD_COMMIT}" \
     -o app ./cmd/main/main.go

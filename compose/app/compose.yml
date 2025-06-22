@@ -1,0 +1,13 @@
+services:
+  api-example-server:
+    image: axidex/api-example-server:feature-app-compose
+    ports:
+      - "${API_PORT}:5000"
+    volumes:
+      - ./env:/app/.env:ro
+    networks:
+      - api-example
+
+networks:
+  api-example:
+    external: true

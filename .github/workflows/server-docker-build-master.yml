@@ -14,9 +14,9 @@ on:
 
 jobs:
   call-ci:
-    uses: ./.github/workflows/go-ci.yml
+    uses: ./.github/workflows/server-go-ci.yml
   call-sec:
-    uses: ./.github/workflows/go-sec.yml
+    uses: ./.github/workflows/server-go-sec.yml
 
   build-server:
     runs-on: ubuntu-latest

@@ -23,3 +23,12 @@ lint:
 
 swag:
 	swag init -g cmd/main/main.go
+
+
+# Security
+
+sca:
+	govulncheck -show verbose ./...
+
+sast:
+	gosec ./...

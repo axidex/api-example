@@ -1,11 +1,3 @@
-# Logs
-logs
-
-# Swagger files
-docs/docs.go
-docs/swagger.json
-docs/swagger.yaml
-
 # Secrets and configs
 .env
 

@@ -25,7 +25,7 @@ db-restart: db-down db
 
 # App Docker compose
 app:
-	cd ./compose/app && docker compose up -d
+	cd ./compose/app && docker compose up -d --pull always
 
 app-down:
 	cd ./compose/app && docker compose down

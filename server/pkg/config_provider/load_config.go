@@ -51,7 +51,7 @@ func loadEnvConfig(filename string) (*viper.Viper, error) {
 	if err := v.ReadInConfig(); err != nil {
 		var configFileNotFoundError viper.ConfigFileNotFoundError
 		if errors.As(err, &configFileNotFoundError) {
-			return v, fmt.Errorf("config file %s not found", filename)
+			return nil, fmt.Errorf("config file %s not found", filename)
 		}
 		return nil, err
 	}

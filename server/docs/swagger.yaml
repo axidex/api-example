@@ -1,0 +1,138 @@
+definitions:
+  api.Response:
+    properties:
+      data: {}
+      info:
+        type: string
+      status:
+        $ref: '#/definitions/api.ResponseType'
+    type: object
+  api.ResponseType:
+    enum:
+    - SUCCESS
+    - ERROR
+    type: string
+    x-enum-varnames:
+    - ResponseSuccess
+    - ResponseError
+  dto.User:
+    properties:
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/test:
+    get:
+      consumes:
+      - application/json
+      description: Endpoint for testing integration with telemetry
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Test endpoint
+      tags:
+      - tests
+  /v1/test-error:
+    get:
+      consumes:
+      - application/json
+      description: Endpoint for testing integration with telemetry with error
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Test endpoint with error
+      tags:
+      - tests
+  /v1/user:
+    get:
+      consumes:
+      - application/json
+      description: Returns user information by provided name
+      parameters:
+      - description: User name to search
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully found user
+          schema:
+            $ref: '#/definitions/api.Response'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/api.Response'
+        "422":
+          description: Invalid request parameters
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: Get user by name
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Creates user
+      parameters:
+      - description: User search request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully found user
+          schema:
+            $ref: '#/definitions/api.Response'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/api.Response'
+        "422":
+          description: Invalid request parameters
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: Create user
+      tags:
+      - Users
+swagger: "2.0"

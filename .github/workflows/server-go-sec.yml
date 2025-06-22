@@ -6,7 +6,7 @@ on:
 
 jobs:
   sast:
-    name: Static Analysis Security Testing (gosec)
+    name: SAST (gosec)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -25,7 +25,7 @@ jobs:
         run: gosec ./...
 
   sca:
-    name: Software Composition Analysis (govulncheck)
+    name: SCA (govulncheck)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -38,4 +38,4 @@ jobs:
           go-version-file: server/go.mod
 
       - name: Run govulncheck
-        run: go install golang.org/x/vuln/cmd/govulncheck@latest && govulncheck ./...
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest && govulncheck -show verbose ./...

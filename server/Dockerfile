@@ -25,7 +25,7 @@ RUN go build \
 
 FROM gcr.io/distroless/static
 
-WORKDIR /opt/ss-manager
+WORKDIR /opt/api-example
 
 COPY --from=builder /build/app app
 

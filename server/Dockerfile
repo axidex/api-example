@@ -17,7 +17,7 @@ ENV PATH="/opt/app-root/src/go/bin:${PATH}"
 RUN go env -w GOBIN="/opt/app-root/src/go/bin"
 
 RUN go get ./...
-RUN go install github.com/swaggo/swag/cmd/swag@latest && swag init -g ./cmd/api/main.go
+RUN go install github.com/swaggo/swag/cmd/swag@latest && swag init -g ./cmd/main/main.go
 
 RUN go test ./...
 RUN go build \

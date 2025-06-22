@@ -23,6 +23,13 @@ jobs:
       - name: Set up Git
         run: git fetch --tags
 
+      - name: Lint Go code
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          working-directory: server
+          args: --timeout=5m
+
       - name: Compute build arguments
         id: build-vars
         run: |

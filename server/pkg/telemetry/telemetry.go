@@ -71,7 +71,7 @@ func (t *OpenTelemetry) GetTracerProvider() *trace.TracerProvider {
 
 // nolint
 func (t *OpenTelemetry) Stop(ctx context.Context) {
-	t.lp.Shutdown(ctx)
-	t.mp.Shutdown(ctx)
-	t.tp.Shutdown(ctx)
+	t.lp.Shutdown(ctx) // #nosec G104
+	t.mp.Shutdown(ctx) // #nosec G104
+	t.tp.Shutdown(ctx) // #nosec G104
 }

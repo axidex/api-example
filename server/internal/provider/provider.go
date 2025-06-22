@@ -13,6 +13,7 @@ type IDependenciesProvider interface {
 	GetDependencies() *Dependencies
 }
 
+// nolint
 type Provider struct {
 	dependencies Dependencies
 	cfg          *config.Config

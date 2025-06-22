@@ -5,8 +5,8 @@ on:
   workflow_call:
 
 jobs:
-  gosec:
-    name: Static Analysis (gosec)
+  sast:
+    name: Static Analysis Security Testing (gosec)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,3 +23,19 @@ jobs:
 
       - name: Run gosec
         run: gosec ./...
+
+  sca:
+    name: Software Composition Analysis (govulncheck)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: server/go.mod
+
+      - name: Run govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest && govulncheck ./...

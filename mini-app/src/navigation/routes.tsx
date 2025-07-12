@@ -3,7 +3,7 @@ import type {ComponentType, ReactNode} from 'react';
 import { InitDataPage } from '@/pages/InitDataPage.tsx';
 import { LaunchParamsPage } from '@/pages/LaunchParamsPage.tsx';
 import { ThemeParamsPage } from '@/pages/ThemeParamsPage.tsx';
-import { MainPage } from '@/pages/MainPage';
+import { MainPage } from '@/pages/MainPage/MainPage.tsx';
 import {MdHistory, MdHome, MdLeaderboard, MdPerson} from "react-icons/md";
 import {IndexPage} from "@/pages/IndexPage/IndexPage.tsx";
 

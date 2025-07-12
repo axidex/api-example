@@ -2,6 +2,7 @@ package ton
 
 import (
 	"context"
+	"errors"
 	"github.com/axidex/api-example/server/pkg/logger"
 	"github.com/xssnick/tonutils-go/address"
 	"github.com/xssnick/tonutils-go/tlb"
@@ -9,7 +10,8 @@ import (
 )
 
 type ITransactionService interface {
-	StartListenTransactions(ctx context.Context) error
+	StartListenTransactions(ctx context.Context, lastProcessedLT uint64, internalTxChan chan<- Transaction) error
+	GetTxLT(ctx context.Context) (uint64, error)
 }
 
 type TransactionService struct {
@@ -32,22 +34,24 @@ func NewTonTransactionService(walletAddr string, client ton.APIClientWrapped, lo
 }
 
 // StartListenTransactions if nil then lasTxLT would be acc.LastTxLT
-func (service *TransactionService) StartListenTransactions(ctx context.Context, lastProcessedLT *uint64, internalTxChan chan<- Transaction) error {
+func (service *TransactionService) StartListenTransactions(ctx context.Context, lastProcessedLT uint64, internalTxChan chan<- Transaction) error {
 	txChan := make(chan *tlb.Transaction)
+	errChan := make(chan error)
 
-	txLt, err := service.getTxLT(ctx, lastProcessedLT)
-	if err != nil {
-		return err
-	}
-
-	go service.client.SubscribeOnTransactions(ctx, service.address, txLt, txChan)
+	go service.client.SubscribeOnTransactions(ctx, service.address, lastProcessedLT, txChan)
 
 	go func(ctx context.Context) {
 		for {
 			select {
 			case <-ctx.Done():
 				return
-			case tx := <-txChan:
+			case tx, ok := <-txChan:
+				if !ok {
+					service.logger.Error(ctx, "txChan closed, stopping transaction listener")
+					errChan <- errors.New("txChan closed, stopping transaction listener")
+					return
+				}
+
 				if tx.IO.In != nil && tx.IO.In.MsgType == tlb.MsgTypeInternal {
 					ti := tx.IO.In.AsInternal()
 
@@ -64,28 +68,26 @@ func (service *TransactionService) StartListenTransactions(ctx context.Context, 
 							ctx, "received transaction",
 							logger.NewAttribute("amount", ti.Amount.String()),
 							logger.NewAttribute("from", ti.SrcAddr.StringRaw()),
+							logger.NewAttribute("lt", tx.LT),
 						)
 
-						txLt = tx.LT
-						internalTxChan <- NewTransaction(ti.SrcAddr.StringRaw(), ti.Amount.Nano().Uint64(), txLt)
+						lastProcessedLT = tx.LT
+						internalTxChan <- NewTransaction(ti.SrcAddr.StringRaw(), ti.Amount.Nano().Uint64(), lastProcessedLT)
 					}
 				}
 			}
 		}
 	}(ctx)
 
-	// nolint
 	select {
 	case <-ctx.Done():
 		return ctx.Err()
+	case err := <-errChan:
+		return err
 	}
 }
 
-func (service *TransactionService) getTxLT(ctx context.Context, lastProcessedLT *uint64) (uint64, error) {
-	if lastProcessedLT != nil {
-		return *lastProcessedLT, nil
-	}
-
+func (service *TransactionService) GetTxLT(ctx context.Context) (uint64, error) {
 	master, err := service.client.CurrentMasterchainInfo(ctx) // we fetch block just to trigger chain proof check
 	if err != nil {
 		return 0, err

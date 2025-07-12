@@ -1,5 +1,5 @@
 package migrations
 
 type Migrator interface {
-	Migrate(schemaName, ownerName string) error
+	Migrate(models []any, schemaName, ownerName string) error
 }

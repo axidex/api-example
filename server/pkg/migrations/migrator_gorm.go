@@ -4,9 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/axidex/api-example/server/pkg/tables"
 	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
 )
 
 var ErrNotTablerInterface = errors.New("interface of table is not a tabler")
@@ -21,11 +19,7 @@ func CreateMigrator(ctx context.Context, db *gorm.DB) Migrator {
 	}
 }
 
-func (m *MigratorGorm) Migrate(schemaName, ownerName string) error {
-	models := []interface{}{
-		&tables.User{},
-	}
-
+func (m *MigratorGorm) Migrate(models []any, schemaName, ownerName string) error {
 	err := m.CreateSchema(schemaName, ownerName)
 	if err != nil {
 		return err
@@ -36,27 +30,7 @@ func (m *MigratorGorm) Migrate(schemaName, ownerName string) error {
 		return err
 	}
 
-	for _, model := range models {
-		tableModel, ok := model.(schema.Tabler)
-		if !ok {
-			return errors.New("interface of table is not a tabler")
-		}
-		tableName := tableModel.TableName()
-		comment := getTableComment(model)
-		m.db.Exec("COMMENT ON TABLE " + tableName + " IS '" + comment + "';")
-	}
-
 	return nil
-}
-
-func getTableComment(model interface{}) string {
-	switch model.(type) {
-	case *tables.User:
-		return "Table for storing user information."
-
-	default:
-		return ""
-	}
 }
 
 func (m *MigratorGorm) CreateTable(table interface{}) error {

@@ -7,7 +7,7 @@ import (
 	"github.com/xssnick/tonutils-go/ton"
 )
 
-func (p *Provider) initTon(ctx context.Context) error {
+func (p *TransactionsProvider) initTonTransactions(ctx context.Context) error {
 
 	conn := liteclient.NewConnectionPool()
 

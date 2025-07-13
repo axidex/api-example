@@ -8,28 +8,23 @@ import (
 	"github.com/axidex/api-example/transactions/internal/config"
 )
 
-type IDependenciesProvider interface {
-	InitDependencies(ctx context.Context) error
-	GetDependencies() *Dependencies
-}
-
 // nolint
-type Provider struct {
-	dependencies Dependencies
-	cfg          *config.Config
+type TransactionsProvider struct {
+	dependencies TransactionsDependencies
+	cfg          *config.TransactionsConfig
 	logger       logger.Logger
 	telemetry    telemetry.Telemetry
 	debug        bool
 }
 
-func NewServiceProvider(cfg *config.Config, logger logger.Logger, telemetry telemetry.Telemetry) IDependenciesProvider {
-	return &Provider{cfg: cfg, logger: logger, telemetry: telemetry}
+func NewTransactionsProvider(cfg *config.TransactionsConfig, logger logger.Logger, telemetry telemetry.Telemetry) *TransactionsProvider {
+	return &TransactionsProvider{cfg: cfg, logger: logger, telemetry: telemetry}
 }
 
-func (p *Provider) InitDependencies(ctx context.Context) error {
+func (p *TransactionsProvider) InitDependencies(ctx context.Context) error {
 	inits := map[string]initFunc{
 		"database": p.initDatabase,
-		"ton":      p.initTon,
+		"ton":      p.initTonTransactions,
 	}
 	for name, init := range inits {
 		if err := init(ctx); err != nil {
@@ -40,6 +35,6 @@ func (p *Provider) InitDependencies(ctx context.Context) error {
 	return nil
 }
 
-func (p *Provider) GetDependencies() *Dependencies {
+func (p *TransactionsProvider) GetDependencies() *TransactionsDependencies {
 	return &p.dependencies
 }

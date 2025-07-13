@@ -5,7 +5,7 @@ import (
 	"github.com/axidex/api-example/server/pkg/db"
 )
 
-func (p *Provider) initDatabase(_ context.Context) error {
+func (p *TransactionsProvider) initDatabase(_ context.Context) error {
 	psqlEngine, err := db.NewGormConnection(p.cfg.Database, p.logger)
 	if err != nil {
 		return err

@@ -1,16 +1,11 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"github.com/axidex/api-example/transactions/internal/app"
+	"github.com/axidex/api-example/transactions/cmd"
 )
 
 func main() {
-	ctx := context.Background()
-
-	if err := app.NewApp().Run(ctx); err != nil {
-		fmt.Println(err)
+	if err := cmd.RootCmd.Execute(); err != nil {
 		return
 	}
 }

@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func (a *App) initStorage(ctx context.Context) error {
+func (a *TransactionsApp) initStorage(ctx context.Context) error {
 	if err := runMigrations(
 		ctx,
 		a.dependencies.DB,

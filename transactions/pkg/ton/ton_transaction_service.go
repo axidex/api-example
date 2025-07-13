@@ -2,7 +2,9 @@ package ton
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/axidex/api-example/server/pkg/logger"
 	"github.com/xssnick/tonutils-go/address"
 	"github.com/xssnick/tonutils-go/tlb"
@@ -70,6 +72,8 @@ func (service *TransactionService) StartListenTransactions(ctx context.Context, 
 							logger.NewAttribute("from", ti.SrcAddr.StringRaw()),
 							logger.NewAttribute("lt", tx.LT),
 						)
+						j, _ := json.MarshalIndent(tx, "", "  ")
+						fmt.Println(string(j))
 
 						lastProcessedLT = tx.LT
 						internalTxChan <- NewTransaction(ti.SrcAddr.StringRaw(), ti.Amount.Nano().Uint64(), lastProcessedLT)

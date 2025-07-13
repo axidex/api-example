@@ -6,7 +6,18 @@ import (
 	"github.com/axidex/api-example/server/pkg/version"
 )
 
-func (a *App) initTelemetry(ctx context.Context) error {
+func (a *TransactionsApp) initTelemetry(ctx context.Context) error {
+	tel, err := telemetry.NewTelemetry(ctx, a.cfg.Telemetry, a.name, version.NewVersion().Version())
+	if err != nil {
+		return err
+	}
+
+	a.telemetry = tel
+
+	return nil
+}
+
+func (a *ApiApp) initTelemetry(ctx context.Context) error {
 	tel, err := telemetry.NewTelemetry(ctx, a.cfg.Telemetry, a.name, version.NewVersion().Version())
 	if err != nil {
 		return err

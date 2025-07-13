@@ -44,7 +44,7 @@ jobs:
         run: |
           echo "BUILD_DATE=$(date -u +'%d.%m.%Y')" >> $GITHUB_OUTPUT
           echo "BUILD_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "latest")
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "main")
           echo "BUILD_VERSION=$TAG" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx

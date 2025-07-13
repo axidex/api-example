@@ -5,7 +5,7 @@ USER 0
 ARG BUILD_VERSION
 ARG BUILD_DATE
 ARG BUILD_COMMIT
-ARG VERSION_PACKAGE="github.com/axidex/api-example/server/pkg/config_provider"
+ARG VERSION_PACKAGE="github.com/axidex/api-example/server/pkg/version"
 
 RUN apk add --no-cache git
 

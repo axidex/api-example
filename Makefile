@@ -40,7 +40,7 @@ transactions:
 transactions-down:
 	cd ./compose/transactions && docker compose down
 
-transactions-restart: app-down app
+transactions-restart: transactions-down transactions
 
 
 # GIT

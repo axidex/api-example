@@ -86,5 +86,4 @@ export async function init(options: {
     swipeBehavior.disableVertical();
     swipeBehavior.isVerticalEnabled();
   }
-
 }

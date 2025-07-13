@@ -2,8 +2,8 @@ package storage
 
 import (
 	"context"
-	"github.com/axidex/api-example/server/pkg/ton"
 	"github.com/axidex/api-example/transactions/internal/tables"
+	"github.com/axidex/api-example/transactions/pkg/ton"
 	"gorm.io/gorm"
 )
 

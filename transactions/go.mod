@@ -5,7 +5,7 @@ go 1.24.0
 toolchain go1.24.4
 
 require (
-	github.com/axidex/api-example/server v0.0.0-20250713104111-3ac9b39f87fd
+	github.com/axidex/api-example/server v0.0.0-20250713162205-f9bde682a4c5
 	github.com/oklog/run v1.2.0
 	github.com/xssnick/tonutils-go v1.13.1
 	gorm.io/gorm v1.30.0

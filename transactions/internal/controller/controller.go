@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"github.com/axidex/api-example/server/pkg/db"
 	"github.com/axidex/api-example/server/pkg/logger"
-	"github.com/axidex/api-example/server/pkg/ton"
 	"github.com/axidex/api-example/transactions/internal/storage"
 	"github.com/axidex/api-example/transactions/internal/tables"
+	"github.com/axidex/api-example/transactions/pkg/ton"
 	"github.com/xssnick/tonutils-go/liteclient"
 )
 

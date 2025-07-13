@@ -2,7 +2,7 @@ package provider
 
 import (
 	"context"
-	"github.com/axidex/api-example/server/pkg/ton"
+	"github.com/axidex/api-example/transactions/pkg/ton"
 	"github.com/xssnick/tonutils-go/liteclient"
 	"gorm.io/gorm"
 )

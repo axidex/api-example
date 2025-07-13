@@ -2,7 +2,7 @@ package provider
 
 import (
 	"context"
-	internalTon "github.com/axidex/api-example/server/pkg/ton"
+	internalTon "github.com/axidex/api-example/transactions/pkg/ton"
 	"github.com/xssnick/tonutils-go/liteclient"
 	"github.com/xssnick/tonutils-go/ton"
 )

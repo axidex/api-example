@@ -4,7 +4,7 @@ import (
 	"github.com/axidex/api-example/server/pkg/db"
 	"github.com/axidex/api-example/server/pkg/logger"
 	"github.com/axidex/api-example/server/pkg/telemetry"
-	"github.com/axidex/api-example/server/pkg/ton"
+	"github.com/axidex/api-example/transactions/pkg/ton"
 )
 
 type Config struct {

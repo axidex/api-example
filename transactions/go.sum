@@ -8,6 +8,10 @@ github.com/andybalholm/brotli v1.2.0 h1:ukwgCxwYrmACq68yiUqwIWnGY0cTPox/M94sVwTo
 github.com/andybalholm/brotli v1.2.0/go.mod h1:rzTDkvFWvIrjDXZHkuS16NPggd91W3kUSvPlQ1pLaKY=
 github.com/axidex/api-example/server v0.0.0-20250713104111-3ac9b39f87fd h1:bkU1hv8OIZTejnhWmyDu/8QyYCANJgsTX/KzHz2Lx0Y=
 github.com/axidex/api-example/server v0.0.0-20250713104111-3ac9b39f87fd/go.mod h1:aEnz5ZQJaI/wcvLYOQbLsAJIjFbqCc7UIHV42HVupTs=
+github.com/axidex/api-example/server v0.0.0-20250713144627-5e739d5a6df1 h1:f19v43OxYLXHUlTHj7Tj+G7m0n8wmT4I3KrzkkTdCo4=
+github.com/axidex/api-example/server v0.0.0-20250713144627-5e739d5a6df1/go.mod h1:aEnz5ZQJaI/wcvLYOQbLsAJIjFbqCc7UIHV42HVupTs=
+github.com/axidex/api-example/server v0.0.0-20250713162205-f9bde682a4c5 h1:jPcrJ7l7xcujKtte9r4rHHBS0sPudTcUlswAYZpNvpQ=
+github.com/axidex/api-example/server v0.0.0-20250713162205-f9bde682a4c5/go.mod h1:aEnz5ZQJaI/wcvLYOQbLsAJIjFbqCc7UIHV42HVupTs=
 github.com/cenkalti/backoff/v5 v5.0.2 h1:rIfFVxEf1QsI7E1ZHfp/B4DF/6QBAUhmgkxc0H7Zss8=
 github.com/cenkalti/backoff/v5 v5.0.2/go.mod h1:rkhZdG3JZukswDf7f0cwqPNk4K0sa+F97BxZthm/crw=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

@@ -44,6 +44,9 @@ jobs:
             echo "BUILD_VERSION=$SAFE_BRANCH_NAME" >> $GITHUB_OUTPUT
           fi
 
+      - name: Version
+        run: echo "${{ steps.build-vars.outputs.BUILD_VERSION }}${{ steps.build-vars.outputs.BUILD_DATE }} ${{ steps.build-vars.outputs.BUILD_COMMIT }}"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 

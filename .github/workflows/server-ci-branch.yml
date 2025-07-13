@@ -8,6 +8,7 @@ on:
   pull_request:
     branches: ['feature/**']
     paths: ['server/**']
+  workflow_dispatch:
 
 jobs:
   call-ci:

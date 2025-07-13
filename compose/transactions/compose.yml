@@ -1,0 +1,11 @@
+services:
+  api-example-transactions:
+    image: axidex/api-example-transactions:main
+    networks:
+      - api-example
+    volumes:
+      - ./.env:/opt/ton-transactions/.env:ro
+
+networks:
+  api-example:
+    external: true

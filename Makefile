@@ -31,3 +31,13 @@ app-down:
 	cd ./compose/app && docker compose down
 
 app-restart: app-down app
+
+# Transactions Docker compose
+.PHONY: transactions
+transactions:
+	cd ./compose/transactions && docker compose up -d --pull always
+
+transactions-down:
+	cd ./compose/transactions && docker compose down
+
+transactions-restart: app-down app

@@ -8,6 +8,7 @@ on:
   pull_request:
     branches: [master]
     paths: ['transactions/**']
+  workflow_dispatch:
 
 jobs:
   call-ci:

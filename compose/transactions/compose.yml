@@ -6,6 +6,16 @@ services:
     volumes:
       - ./.env:/opt/ton-transactions/.env:ro
 
+  api-example-transactions-api:
+    image: axidex/api-example-transactions:main
+    entrypoint: ["./app", "api"]
+    ports:
+      - "9000:9000"
+    networks:
+      - api-example
+    volumes:
+      - ./.env:/opt/ton-transactions/.env:ro
+
 networks:
   api-example:
     external: true

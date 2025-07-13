@@ -4,7 +4,12 @@ import (
 	"context"
 )
 
-func (a *App) initName(_ context.Context) error {
+func (a *TransactionsApp) initName(_ context.Context) error {
 	a.name = "transactions"
+	return nil
+}
+
+func (a *ApiApp) initName(_ context.Context) error {
+	a.name = "api"
 	return nil
 }

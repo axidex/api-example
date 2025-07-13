@@ -9,12 +9,16 @@ import (
 
 type initFunc = func(context.Context) error
 
-type Dependencies struct {
+type TransactionsDependencies struct {
 	DB            *gorm.DB
 	TonService    *ton.TransactionService
 	TonConnection *liteclient.ConnectionPool
 }
 
-func (d *Dependencies) Stop() {
+func (d *TransactionsDependencies) Stop() {
 	d.TonConnection.Stop()
 }
+
+type ApiDependencies struct{}
+
+func (d *ApiDependencies) Stop() {}

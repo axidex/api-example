@@ -41,3 +41,15 @@ transactions-down:
 	cd ./compose/transactions && docker compose down
 
 transactions-restart: app-down app
+
+
+# GIT
+remove-local-branches:
+	@for branch in $$(git branch -r | grep 'feature/' | sed 's/^[* ]*//'); do \
+		git branch -D $$branch; \
+	done
+
+remove-remote-branches:
+	@for branch in $$(git branch | grep 'origin/feature/' | sed 's/origin\///'); do \
+		git push origin --delete $$branch; \
+	done

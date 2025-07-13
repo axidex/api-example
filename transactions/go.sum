@@ -6,8 +6,8 @@ github.com/ClickHouse/clickhouse-go/v2 v2.37.2 h1:wRLNKoynvHQEN4znnVHNLaYnrqVc9s
 github.com/ClickHouse/clickhouse-go/v2 v2.37.2/go.mod h1:pH2zrBGp5Y438DMwAxXMm1neSXPPjSI7tD4MURVULw8=
 github.com/andybalholm/brotli v1.2.0 h1:ukwgCxwYrmACq68yiUqwIWnGY0cTPox/M94sVwToPjQ=
 github.com/andybalholm/brotli v1.2.0/go.mod h1:rzTDkvFWvIrjDXZHkuS16NPggd91W3kUSvPlQ1pLaKY=
-github.com/axidex/api-example/server v0.0.0-20250713075131-286ba7a76064 h1:Ue3PEJsWTATuLvqdNZkggH0noJUgohgVxOCzRt+PkOw=
-github.com/axidex/api-example/server v0.0.0-20250713075131-286ba7a76064/go.mod h1:aEnz5ZQJaI/wcvLYOQbLsAJIjFbqCc7UIHV42HVupTs=
+github.com/axidex/api-example/server v0.0.0-20250713104111-3ac9b39f87fd h1:bkU1hv8OIZTejnhWmyDu/8QyYCANJgsTX/KzHz2Lx0Y=
+github.com/axidex/api-example/server v0.0.0-20250713104111-3ac9b39f87fd/go.mod h1:aEnz5ZQJaI/wcvLYOQbLsAJIjFbqCc7UIHV42HVupTs=
 github.com/cenkalti/backoff/v5 v5.0.2 h1:rIfFVxEf1QsI7E1ZHfp/B4DF/6QBAUhmgkxc0H7Zss8=
 github.com/cenkalti/backoff/v5 v5.0.2/go.mod h1:rkhZdG3JZukswDf7f0cwqPNk4K0sa+F97BxZthm/crw=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

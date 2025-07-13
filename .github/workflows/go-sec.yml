@@ -1,8 +1,11 @@
-# .github/workflows/go-sec.yml
 name: Reusable Go Security Workflow
 
 on:
   workflow_call:
+    inputs:
+      service_dir:
+        required: true
+        type: string
   workflow_dispatch:
 
 jobs:
@@ -11,13 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: server
+        working-directory: ${{ inputs.service_dir }}
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-go@v5
         with:
-          go-version-file: server/go.mod
+          go-version-file: ${{ inputs.service_dir }}/go.mod
+          cache-dependency-path: ${{ inputs.service_dir }}
 
       - name: Install gosec
         run: go install github.com/securego/gosec/v2/cmd/gosec@latest
@@ -30,13 +34,14 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: server
+        working-directory: ${{ inputs.service_dir }}
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-go@v5
         with:
-          go-version-file: server/go.mod
+          go-version-file: ${{ inputs.service_dir }}/go.mod
+          cache-dependency-path: ${{ inputs.service_dir }}
 
       - name: Run govulncheck
         run: go install golang.org/x/vuln/cmd/govulncheck@latest && govulncheck -show verbose ./...

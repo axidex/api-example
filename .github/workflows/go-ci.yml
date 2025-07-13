@@ -1,0 +1,46 @@
+name: Reusable Go CI Workflow
+
+on:
+  workflow_call:
+    inputs:
+      service_dir:
+        required: true
+        type: string
+
+jobs:
+  lint:
+    name: Lint Go Code
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.service_dir }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ inputs.service_dir }}/go.mod
+          cache-dependency-path: ${{ inputs.service_dir }}
+
+      - uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          working-directory: ${{ inputs.service_dir }}
+          args: --timeout=5m
+
+  unit-tests:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.service_dir }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ inputs.service_dir }}/go.mod
+          cache-dependency-path: ${{ inputs.service_dir }}
+
+      - name: Run unit tests
+        run: go test -v ./...

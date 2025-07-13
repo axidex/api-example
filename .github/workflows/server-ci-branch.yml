@@ -1,0 +1,25 @@
+name: Build Server Branch
+
+on:
+  push:
+    branches: ['feature/**']
+    tags: ['*']
+    paths: ['server/**']
+  pull_request:
+    branches: ['feature/**']
+    paths: ['server/**']
+
+jobs:
+  call-ci:
+    uses: ./.github/workflows/go-ci.yml
+    with:
+      service_dir: 'transactions'
+
+  build:
+    uses: ./.github/workflows/docker-build-branch.yml
+    with:
+      service_dir: 'server'
+      docker_image_name: 'api-example-server'
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

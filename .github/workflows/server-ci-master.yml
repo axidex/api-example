@@ -1,0 +1,31 @@
+name: Build Server
+
+on:
+  push:
+    branches: [master]
+    tags: ['*']
+    paths: ['server/**']
+  pull_request:
+    branches: [master]
+    paths: ['server/**']
+
+jobs:
+  call-ci:
+    uses: ./.github/workflows/go-ci.yml
+    with:
+      service_dir: 'server'
+
+  call-sec:
+    uses: ./.github/workflows/go-sec.yml
+    with:
+      service_dir: 'server'
+
+  build:
+    needs: [call-ci, call-sec]
+    uses: ./.github/workflows/docker-build-master.yml
+    with:
+      service_dir: 'server'
+      docker_image_name: 'api-example-server'
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

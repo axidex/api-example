@@ -1,0 +1,25 @@
+name: Build Transactions Branch
+
+on:
+  push:
+    branches: ['feature/**']
+    paths: ['transactions/**']
+  pull_request:
+    branches: ['feature/**']
+    paths: ['transactions/**']
+
+jobs:
+  call-ci:
+    uses: ./.github/workflows/go-ci.yml
+    with:
+      service_dir: 'transactions'
+
+  build:
+    needs: [ call-ci ]
+    uses: ./.github/workflows/docker-build-branch.yml
+    with:
+      service_dir: 'transactions'
+      docker_image_name: 'api-example-transactions'
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

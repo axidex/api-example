@@ -24,23 +24,19 @@ import "./MainPage.css"
 const [, e] = bem('ton-connect-page');
 
 const createPayloadFromAPI = async (payload: string) => {
-    try {
-        const response = await fetch(`https://axidex.ru:9000/v1/cell?payload=${encodeURIComponent(payload)}`, {
-            method: 'POST',
-            headers: {
-                'accept': 'application/json',
-            },
-        });
+    const response = await fetch(`https://axidex.ru:9000/v1/cell?payload=${encodeURIComponent(payload)}`, {
+        method: 'POST',
+        headers: {
+            'accept': 'application/json',
+        },
+    });
 
-        const result = await response.json();
-        if (result.status === 'SUCCESS') {
-            return result.data;
-        }
-        throw new Error('Failed to create cell');
-    } catch (error) {
-        console.error('Error creating payload cell:', error);
-        return null;
+    const result = await response.json();
+    if (result.status === 'SUCCESS') {
+        return result.data;
     }
+
+    throw new Error('Failed to create cell');
 };
 
 export const MainPage: FC = () => {

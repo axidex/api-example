@@ -64,7 +64,7 @@ func (service *TransactionService) StartListenTransactions(ctx context.Context, 
 						}
 					}
 
-					payload, err := AnalyzePayload(ti.Body)
+					userId, err := DecodeStringPayload(ti.Payload())
 					if err != nil {
 						service.logger.Warn(ctx, fmt.Sprintf("Ton payload decode failed: %s", err.Error()))
 					}
@@ -72,14 +72,14 @@ func (service *TransactionService) StartListenTransactions(ctx context.Context, 
 					if ti.Amount.Nano().Sign() > 0 {
 						service.logger.Info(
 							ctx, "received transaction",
-							logger.NewAttribute("payload", payload),
+							logger.NewAttribute("userId", userId),
 							logger.NewAttribute("amount", ti.Amount.String()),
 							logger.NewAttribute("from", ti.SrcAddr.StringRaw()),
 							logger.NewAttribute("lt", tx.LT),
 						)
 
 						lastProcessedLT = tx.LT
-						internalTxChan <- NewTransaction(ti.SrcAddr.StringRaw(), ti.Amount.Nano().Uint64(), lastProcessedLT)
+						internalTxChan <- NewTransaction(ti.SrcAddr.StringRaw(), userId, ti.Amount.Nano().Uint64(), lastProcessedLT)
 					}
 				}
 			}

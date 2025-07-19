@@ -1,4 +1,4 @@
-import {openLink} from '@telegram-apps/sdk-react';
+import {openLink, retrieveLaunchParams} from '@telegram-apps/sdk-react';
 import { TonConnectButton, useTonConnectUI, useTonWallet } from '@tonconnect/ui-react';
 import {
     Avatar,
@@ -12,7 +12,7 @@ import {
     Text,
     Title,
 } from '@telegram-apps/telegram-ui';
-import type { FC } from 'react';
+import {FC} from 'react';
 import { useState } from 'react';
 
 import { DisplayData } from '@/components/DisplayData/DisplayData.tsx';
@@ -25,7 +25,7 @@ const [, e] = bem('ton-connect-page');
 
 const createPayloadFromAPI = async (payload: string) => {
     try {
-        const response = await fetch(`http://194.116.216.136:9000/v1/cell?payload=${encodeURIComponent(payload)}`, {
+        const response = await fetch(`https://axidex.ru:9000/v1/cell?payload=${encodeURIComponent(payload)}`, {
             method: 'POST',
             headers: {
                 'accept': 'application/json',
@@ -51,18 +51,19 @@ export const MainPage: FC = () => {
     const handleTopUp = async () => {
         if (!wallet) return;
 
-        const response = await tonConnectUI.sendTransaction({
+        const userId = retrieveLaunchParams().tgWebAppData?.user?.id?.toString() ?? '';
+        const payloadBOC = await createPayloadFromAPI(userId);
+
+        await tonConnectUI.sendTransaction({
             validUntil: Math.floor(Date.now() / 1000) + 300, // 5 мин
             messages: [
                 {
                     address: '0QChdPRtnA0M4a4O1eOMNqp-dO3dxYftquBxyemhDpWAw8DG',
                     amount: BigInt(parseFloat(amount) * 1e9).toString(),
-                    payload: await createPayloadFromAPI("12345667")
+                    payload: payloadBOC
                 },
             ],
         });
-
-        console.log(response.boc)
     };
 
     if (!wallet) {

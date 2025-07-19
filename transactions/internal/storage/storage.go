@@ -26,7 +26,7 @@ func (a AppStorage) SaveTransaction(ctx context.Context, transaction ton.Transac
 		transactionRepoTx := NewTransactionRepository(tx)
 		logicTimeRepoTx := NewLogicTimeRepository(tx)
 
-		if err := transactionRepoTx.Save(ctx, tables.NewTransaction(transaction.Source, transaction.Amount)); err != nil {
+		if err := transactionRepoTx.Save(ctx, tables.NewTransaction(transaction.Source, transaction.UserId, transaction.Amount)); err != nil {
 			return err
 		}
 

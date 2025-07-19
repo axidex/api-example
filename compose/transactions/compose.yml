@@ -1,6 +1,6 @@
 services:
   api-example-transactions:
-    image: axidex/api-example-transactions:main
+    image: axidex/api-example-transactions:feature-payload-decode
     networks:
       - api-example
     volumes:
@@ -9,16 +9,29 @@ services:
     restart: always
 
   api-example-transactions-api:
-    image: axidex/api-example-transactions:main
+    image: axidex/api-example-transactions:feature-payload-decode
     entrypoint: ["./app", "api"]
     ports:
-      - "9000:9000"
+      - "9001:9000"
     networks:
       - api-example
     volumes:
       - ./.env:/opt/ton-transactions/.env:ro
     
     restart: always
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "9000:9000"
+    depends_on:
+      - api-example-transactions-api
+    networks:
+      - api-example
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/ssl:ro
 
 networks:
   api-example:

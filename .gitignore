@@ -9,3 +9,6 @@ compose/db/postgres_data
 
 # mocks
 mocks
+
+# certs
+certs

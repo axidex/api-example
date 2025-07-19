@@ -24,6 +24,9 @@ db-logs:
 db-remove:
 	cd ./compose/db && docker compose down -v && rm -rf ./postgres_data
 
+db-down:
+	cd ./compose/db && docker compose down -v
+
 db-restart: db-down db
 
 # App Docker compose
@@ -43,7 +46,7 @@ transactions:
 transactions-logs:
 	cd ./compose/transactions && docker compose logs -f
 
-transactions-remove:
+transactions-down:
 	cd ./compose/transactions && docker compose down -v
 
 transactions-restart: transactions-down transactions

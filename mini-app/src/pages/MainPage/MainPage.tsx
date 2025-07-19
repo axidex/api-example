@@ -23,6 +23,26 @@ import "./MainPage.css"
 
 const [, e] = bem('ton-connect-page');
 
+const createPayloadFromAPI = async (payload: string) => {
+    try {
+        const response = await fetch(`http://194.116.216.136:9000/v1/cell?payload=${encodeURIComponent(payload)}`, {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+            },
+        });
+
+        const result = await response.json();
+        if (result.status === 'SUCCESS') {
+            return result.data;
+        }
+        throw new Error('Failed to create cell');
+    } catch (error) {
+        console.error('Error creating payload cell:', error);
+        return null;
+    }
+};
+
 export const MainPage: FC = () => {
     const wallet = useTonWallet();
     const [tonConnectUI] = useTonConnectUI();
@@ -36,7 +56,8 @@ export const MainPage: FC = () => {
             messages: [
                 {
                     address: '0QChdPRtnA0M4a4O1eOMNqp-dO3dxYftquBxyemhDpWAw8DG',
-                    amount: BigInt(parseFloat(amount) * 1e9).toString()
+                    amount: BigInt(parseFloat(amount) * 1e9).toString(),
+                    payload: await createPayloadFromAPI("12345667")
                 },
             ],
         });

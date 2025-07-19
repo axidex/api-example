@@ -2,7 +2,6 @@ package ton
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/axidex/api-example/server/pkg/logger"
@@ -65,15 +64,19 @@ func (service *TransactionService) StartListenTransactions(ctx context.Context, 
 						}
 					}
 
+					payload, err := AnalyzePayload(ti.Body)
+					if err != nil {
+						service.logger.Warn(ctx, fmt.Sprintf("Ton payload decode failed: %s", err.Error()))
+					}
+
 					if ti.Amount.Nano().Sign() > 0 {
 						service.logger.Info(
 							ctx, "received transaction",
+							logger.NewAttribute("payload", payload),
 							logger.NewAttribute("amount", ti.Amount.String()),
 							logger.NewAttribute("from", ti.SrcAddr.StringRaw()),
 							logger.NewAttribute("lt", tx.LT),
 						)
-						j, _ := json.MarshalIndent(tx, "", "  ")
-						fmt.Println(string(j))
 
 						lastProcessedLT = tx.LT
 						internalTxChan <- NewTransaction(ti.SrcAddr.StringRaw(), ti.Amount.Nano().Uint64(), lastProcessedLT)

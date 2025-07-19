@@ -1,6 +1,7 @@
 package ton
 
 import (
+	"encoding/base64"
 	"fmt"
 	"github.com/xssnick/tonutils-go/tvm/cell"
 )
@@ -14,7 +15,7 @@ func CreateCell(message string) (string, error) {
 
 	result := c.EndCell()
 
-	return string(result.ToBOC()), nil
+	return base64.StdEncoding.EncodeToString(result.ToBOC()), nil
 }
 
 func DecodeStringPayload(body *cell.Cell) (string, error) {

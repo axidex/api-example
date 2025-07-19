@@ -5,6 +5,8 @@ services:
       - api-example
     volumes:
       - ./.env:/opt/ton-transactions/.env:ro
+    
+    restart: always
 
   api-example-transactions-api:
     image: axidex/api-example-transactions:main
@@ -15,6 +17,8 @@ services:
       - api-example
     volumes:
       - ./.env:/opt/ton-transactions/.env:ro
+    
+    restart: always
 
 networks:
   api-example:

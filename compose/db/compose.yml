@@ -5,12 +5,13 @@ services:
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: api-example
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
     networks:
       - api-example
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -28,8 +29,10 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: postgres
       DB_PORT: 5432
+      DB_NAME: api-example 
       AUTH_TYPE: scram-sha-256
-      ADMIN_USERS: postgres,dbuser
+      ADMIN_USERS: ${DB_USER}
+      AUTH_USER_LIST: "${DB_USER}=${DB_PASSWORD}"
       LISTEN_PORT: 6432
       POOL_MODE: transaction
       MAX_CLIENT_CONN: 100

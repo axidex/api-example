@@ -18,8 +18,11 @@ telemetry-restart: telemetry-down telemetry
 db:
 	cd ./compose/db && docker compose up -d
 
-db-down:
-	cd ./compose/db && docker compose down
+db-logs:
+	cd ./compose/db && docker compose logs -f
+
+db-remove:
+	cd ./compose/db && docker compose down -v && rm -rf ./postgres_data
 
 db-restart: db-down db
 
@@ -37,8 +40,11 @@ app-restart: app-down app
 transactions:
 	cd ./compose/transactions && docker compose up -d --pull always
 
-transactions-down:
-	cd ./compose/transactions && docker compose down
+transactions-logs:
+	cd ./compose/transactions && docker compose logs -f
+
+transactions-remove:
+	cd ./compose/transactions && docker compose down -v
 
 transactions-restart: transactions-down transactions
 

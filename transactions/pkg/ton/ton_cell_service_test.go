@@ -10,12 +10,6 @@ import (
 	"testing"
 )
 
-func TestCellService(t *testing.T) {
-	payload, err := ton.CreateCell("1230000011")
-	require.NoError(t, err)
-	t.Logf("payload: %s", payload)
-}
-
 func TestEncodeCell(t *testing.T) {
 	before := "12345667"
 	payload, err := ton.CreateCell(before)

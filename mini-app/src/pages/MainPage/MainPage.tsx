@@ -1,157 +1,61 @@
-import {openLink, retrieveLaunchParams} from '@telegram-apps/sdk-react';
-import { TonConnectButton, useTonConnectUI, useTonWallet } from '@tonconnect/ui-react';
-import {
-    Avatar,
-    Button,
-    Cell,
-    Input,
-    List,
-    Navigation,
-    Placeholder,
-    Section,
-    Text,
-    Title,
-} from '@telegram-apps/telegram-ui';
-import {FC} from 'react';
-import { useState } from 'react';
+import { FC } from 'react';
+import { useTonWallet } from '@tonconnect/ui-react';
+import { List } from '@telegram-apps/telegram-ui';
 
 import { DisplayData } from '@/components/DisplayData/DisplayData.tsx';
 import { Page } from '@/components/Page.tsx';
 import { bem } from '@/css/bem.ts';
+import { useTonPayment } from '@/hooks/useTonPayment';
+import { WalletInfo } from '@/components/WalletInfo';
+import { TopUpSection } from '@/components/TopUpSection';
+import { ConnectWalletPlaceholder } from '@/components/ConnectWalletPlaceholder';
 
 import "./MainPage.css"
 
 const [, e] = bem('ton-connect-page');
 
-const createPayloadFromAPI = async (payload: string) => {
-    const response = await fetch(`https://axidex.ru:9000/v1/cell?payload=${encodeURIComponent(payload)}`, {
-        method: 'POST',
-        headers: {
-            'accept': 'application/json',
-        },
-    });
-
-    const result = await response.json();
-    if (result.status === 'SUCCESS') {
-        return result.data;
-    }
-
-    throw new Error('Failed to create cell');
-};
-
 export const MainPage: FC = () => {
     const wallet = useTonWallet();
-    const [tonConnectUI] = useTonConnectUI();
-    const [amount, setAmount] = useState('0.1'); // default 0.1 TON
-
-    const handleTopUp = async () => {
-        if (!wallet) return;
-
-        const userId = retrieveLaunchParams().tgWebAppData?.user?.id?.toString() ?? '';
-        const payloadBOC = await createPayloadFromAPI(userId);
-
-        await tonConnectUI.sendTransaction({
-            validUntil: Math.floor(Date.now() / 1000) + 300, // 5 мин
-            messages: [
-                {
-                    address: '0QChdPRtnA0M4a4O1eOMNqp-dO3dxYftquBxyemhDpWAw8DG',
-                    amount: BigInt(parseFloat(amount) * 1e9).toString(),
-                    payload: payloadBOC
-                },
-            ],
-        });
-    };
+    const { amount, setAmount, handleTopUp } = useTonPayment();
 
     if (!wallet) {
-        return (
-            <Page>
-                <Placeholder
-                    className={e('placeholder')}
-                    header="TON Connect"
-                    description={
-                        <>
-                            <Text>
-                                To display the data related to the TON Connect, it is required to connect your
-                                wallet
-                            </Text>
-                            <TonConnectButton className={e('button')} />
-                        </>
-                    }
-                />
-            </Page>
-        );
+        return <ConnectWalletPlaceholder className={e('placeholder')} />;
     }
 
-    const {
-        account: { chain, publicKey, address },
-        device: {
-            appName,
-            appVersion,
-            maxProtocolVersion,
-            platform,
-            features,
-        },
-    } = wallet;
+    const { account, device } = wallet;
 
     return (
         <Page>
             <List>
-                {'imageUrl' in wallet && (
-                    <>
-                        <Section>
-                            <Cell
-                                before={
-                                    <Avatar src={wallet.imageUrl} alt="Provider logo" width={60} height={60} />
-                                }
-                                after={<Navigation>About wallet</Navigation>}
-                                subtitle={wallet.appName}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    openLink(wallet.aboutUrl);
-                                }}
-                            >
-                                <Title level="3">{wallet.name}</Title>
-                            </Cell>
-                        </Section>
-                        <TonConnectButton className={e('button-connected')} />
-                    </>
-                )}
+                <WalletInfo wallet={wallet} className={e('button-connected')} />
 
-                <Section header="Пополнение баланса">
-                    <Input
-                        type="number"
-                        min="0.01"
-                        step="0.01"
-                        placeholder="Сумма в TON"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                    />
-                    <Button onClick={handleTopUp} style={{ marginTop: 12 }}>
-                        Пополнить
-                    </Button>
-                </Section>
+                <TopUpSection
+                    amount={amount}
+                    onAmountChange={setAmount}
+                    onTopUp={handleTopUp}
+                />
 
                 <DisplayData
                     header="Account"
                     rows={[
-                        { title: 'Address', value: address },
-                        { title: 'Chain', value: chain },
-                        { title: 'Public Key', value: publicKey },
+                        { title: 'Address', value: account.address },
+                        { title: 'Chain', value: account.chain },
+                        { title: 'Public Key', value: account.publicKey },
                     ]}
                 />
 
                 <DisplayData
                     header="Device"
                     rows={[
-                        { title: 'App Name', value: appName },
-                        { title: 'App Version', value: appVersion },
-                        { title: 'Max Protocol Version', value: maxProtocolVersion },
-                        { title: 'Platform', value: platform },
+                        { title: 'App Name', value: device.appName },
+                        { title: 'App Version', value: device.appVersion },
+                        { title: 'Max Protocol Version', value: device.maxProtocolVersion },
+                        { title: 'Platform', value: device.platform },
                         {
                             title: 'Features',
-                            value: features
+                            value: device.features
                                 .map(f => typeof f === 'object' ? f.name : undefined)
-                                .filter(v => v)
+                                .filter(Boolean)
                                 .join(', '),
                         },
                     ]}

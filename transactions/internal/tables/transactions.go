@@ -9,7 +9,7 @@ type Transaction struct {
 	TransactionPK int `json:"transaction_pk" gorm:"primary_key;column:transaction_pk;comment:Primary key of table transactions."`
 
 	Source string `json:"source" gorm:"column:source;comment:Source of table transactions."`
-	UserId string `json:"user_id" gorm:"column:user_id;comment:UserID or ChatID."`
+	UserId *int64 `json:"user_id" gorm:"column:user_id;comment:UserID or ChatID."`
 	Amount uint64 `json:"amount" gorm:"column:amount;comment:Amount of transactions."`
 
 	CreatedAt time.Time    `json:"created_at" gorm:"column:created_at;type:timestamp without time zone;comment:Creation time."`
@@ -17,7 +17,7 @@ type Transaction struct {
 	DeletedAt sql.NullTime `json:"deleted_at" gorm:"column:deleted_at;type:timestamp without time zone;comment:Delete time."`
 }
 
-func NewTransaction(source, userId string, amount uint64) *Transaction {
+func NewTransaction(source string, userId *int64, amount uint64) *Transaction {
 	now := time.Now().UTC()
 
 	return &Transaction{

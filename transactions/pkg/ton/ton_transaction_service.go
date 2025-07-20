@@ -10,9 +10,15 @@ import (
 	"github.com/xssnick/tonutils-go/ton"
 )
 
+var (
+	TransactionNotFoundInLiteServer = errors.New("transaction not found in lite server")
+	UnknownLiteServerError          = errors.New("unknown lite server error")
+)
+
 type ITransactionService interface {
 	StartListenTransactions(ctx context.Context, lastProcessedLT uint64, internalTxChan chan<- Transaction) error
 	GetTxLT(ctx context.Context) (uint64, error)
+	PollTransactions(ctx context.Context, lastProcessedLT uint64) error
 }
 
 type TransactionService struct {
@@ -116,4 +122,30 @@ func (service *TransactionService) GetTxLT(ctx context.Context) (uint64, error) 
 	}
 
 	return acc.LastTxLT, nil
+}
+
+func (service *TransactionService) PollTransactions(ctx context.Context, lastProcessedLT uint64) error {
+	_, err := service.client.ListTransactions(ctx, service.address, 1, lastProcessedLT, nil)
+	if err != nil {
+		var lsErr ton.LSError
+		if errors.As(err, &lsErr) {
+			service.logger.Warn(ctx, fmt.Sprintf("LSError received: Code=%d, Text=%s", lsErr.Code, lsErr.Text), logger.NewAttribute("LT", lastProcessedLT))
+
+			switch lsErr.Code {
+			case -400:
+				if lsErr.Text == "transaction hash mismatch" {
+					return nil
+				}
+				return TransactionNotFoundInLiteServer
+			case 0:
+				// no transactions found
+				return nil
+			default:
+				service.logger.Error(ctx, fmt.Sprintf("liteserver error (code %d): %s", lsErr.Code, lsErr.Text), logger.NewAttribute("LT", lastProcessedLT))
+				return UnknownLiteServerError
+			}
+		}
+	}
+
+	return nil
 }

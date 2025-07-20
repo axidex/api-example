@@ -36,16 +36,8 @@ func (c *TonController) Start(ctx context.Context) error {
 	stickyCtx := c.conn.StickyContext(ctx)
 	c.logger.Info(ctx, "Starting transaction handler")
 
-	ltValue, err := c.storage.LogicTimeRepository.Get(ctx)
-	if errors.Is(err, db.ErrRecordNotFound) {
-		ltValue, err = c.tonService.GetTxLT(stickyCtx)
-		if err != nil {
-			return err
-		}
-		if err := c.storage.LogicTimeRepository.Create(ctx, tables.NewLogicTime(ltValue)); err != nil {
-			return err
-		}
-	} else if err != nil {
+	ltValue, err := c.GetLT(stickyCtx)
+	if err != nil {
 		return err
 	}
 
@@ -84,4 +76,55 @@ func (c *TonController) saveTransaction(ctx context.Context, transaction ton.Tra
 	}
 
 	return nil
+}
+
+func (c *TonController) GetLT(ctx context.Context) (uint64, error) {
+	ltValue, err := c.storage.LogicTimeRepository.Get(ctx)
+	if errors.Is(err, db.ErrRecordNotFound) {
+		if ltValue, err = c.createCurrentLT(ctx); err != nil {
+			return 0, err
+		}
+	} else if err != nil {
+		return 0, err
+	}
+
+	// Verify that this LT is still in this block in the TON lite client
+	if err := c.tonService.PollTransactions(ctx, ltValue); err != nil {
+		if errors.Is(err, ton.TransactionNotFoundInLiteServer) {
+			ltValue, err = c.updateCurrentLT(ctx)
+			if err != nil {
+				return 0, err
+			}
+		} else {
+			return 0, err
+		}
+	}
+
+	return ltValue, nil
+}
+
+func (c *TonController) createCurrentLT(ctx context.Context) (uint64, error) {
+	ltValue, err := c.tonService.GetTxLT(ctx)
+	if err != nil {
+		return 0, err
+	}
+
+	if err := c.storage.LogicTimeRepository.Create(ctx, tables.NewLogicTime(ltValue)); err != nil {
+		return 0, err
+	}
+
+	return ltValue, nil
+}
+
+func (c *TonController) updateCurrentLT(ctx context.Context) (uint64, error) {
+	ltValue, err := c.tonService.GetTxLT(ctx)
+	if err != nil {
+		return 0, err
+	}
+
+	if err := c.storage.LogicTimeRepository.Update(ctx, ltValue); err != nil {
+		return 0, err
+	}
+
+	return ltValue, nil
 }

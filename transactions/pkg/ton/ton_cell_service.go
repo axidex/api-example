@@ -9,6 +9,10 @@ import (
 func CreateCell(message string) (string, error) {
 	c := cell.BeginCell()
 
+	if err := c.StoreUInt(0, 32); err != nil {
+		return "", err
+	}
+
 	if err := c.StoreStringSnake(message); err != nil {
 		return "", err
 	}
@@ -24,6 +28,11 @@ func DecodeStringPayload(body *cell.Cell) (string, error) {
 	}
 
 	slice := body.BeginParse()
+
+	_, err := slice.LoadUInt(32)
+	if err != nil {
+		return "", fmt.Errorf("failed to read op code: %w", err)
+	}
 
 	message, err := slice.LoadStringSnake()
 	if err != nil {

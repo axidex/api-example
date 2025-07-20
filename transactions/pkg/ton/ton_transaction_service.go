@@ -70,16 +70,26 @@ func (service *TransactionService) StartListenTransactions(ctx context.Context, 
 					}
 
 					if ti.Amount.Nano().Sign() > 0 {
+						validatedUserId, isValid := ValidateUserID(userId)
+						if !isValid {
+							service.logger.Warn(ctx,
+								"Invalid userId in transaction payload, skipping transaction",
+								logger.NewAttribute("invalid_userId", fmt.Sprintf("%q", userId)),
+								logger.NewAttribute("from", ti.SrcAddr.StringRaw()),
+								logger.NewAttribute("amount", ti.Amount.String()),
+							)
+						}
+
 						service.logger.Info(
 							ctx, "received transaction",
-							logger.NewAttribute("userId", userId),
+							logger.NewAttribute("userId", validatedUserId),
 							logger.NewAttribute("amount", ti.Amount.String()),
 							logger.NewAttribute("from", ti.SrcAddr.StringRaw()),
 							logger.NewAttribute("lt", tx.LT),
 						)
 
 						lastProcessedLT = tx.LT
-						internalTxChan <- NewTransaction(ti.SrcAddr.StringRaw(), userId, ti.Amount.Nano().Uint64(), lastProcessedLT)
+						internalTxChan <- NewTransaction(ti.SrcAddr.StringRaw(), validatedUserId, ti.Amount.Nano().Uint64(), lastProcessedLT)
 					}
 				}
 			}

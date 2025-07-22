@@ -1,6 +1,6 @@
 services:
   api-example-transactions:
-    image: axidex/api-example-transactions:feature-payload-decode
+    image: axidex/api-example-transactions:main
     networks:
       - api-example
     volumes:
@@ -9,7 +9,7 @@ services:
     restart: always
 
   api-example-transactions-api:
-    image: axidex/api-example-transactions:feature-payload-decode
+    image: axidex/api-example-transactions:main
     entrypoint: ["./app", "api"]
     ports:
       - "9001:9000"

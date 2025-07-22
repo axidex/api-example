@@ -27,3 +27,15 @@ func (p *TransactionsProvider) initTonTransactions(ctx context.Context) error {
 
 	return nil
 }
+
+func (p *TransactionsProvider) initTonPriceService(ctx context.Context) error {
+	service, err := internalTon.NewPriceService(ctx, p.logger)
+	if err != nil {
+		return err
+	}
+	service.Start()
+
+	p.dependencies.TonPriceService = service
+
+	return nil
+}

@@ -5,6 +5,7 @@ go 1.24.0
 toolchain go1.24.4
 
 require (
+	github.com/JulianToledano/goingecko/v3 v3.0.3
 	github.com/axidex/api-example/server v0.0.0-20250713162205-f9bde682a4c5
 	github.com/gin-gonic/gin v1.10.1
 	github.com/oklog/run v1.2.0
@@ -12,10 +13,12 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
+	github.com/swaggo/swag v1.16.4
 	github.com/xssnick/tonutils-go v1.13.1
 	go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin v0.61.0
 	go.opentelemetry.io/otel v1.37.0
 	go.opentelemetry.io/otel/metric v1.37.0
+	go.uber.org/mock v0.5.2
 	gorm.io/gorm v1.30.0
 )
 
@@ -81,7 +84,6 @@ require (
 	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/spf13/viper v1.20.1 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
-	github.com/swaggo/swag v1.16.4 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect

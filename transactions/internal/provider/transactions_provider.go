@@ -23,8 +23,9 @@ func NewTransactionsProvider(cfg *config.TransactionsConfig, logger logger.Logge
 
 func (p *TransactionsProvider) InitDependencies(ctx context.Context) error {
 	inits := map[string]initFunc{
-		"database": p.initDatabase,
-		"ton":      p.initTonTransactions,
+		"database":          p.initDatabase,
+		"ton":               p.initTonTransactions,
+		"ton-price-service": p.initTonPriceService,
 	}
 	for name, init := range inits {
 		if err := init(ctx); err != nil {

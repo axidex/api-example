@@ -12,7 +12,10 @@ func (a *TransactionsApp) initHandler(_ context.Context) error {
 		a.dependencies.TonService,
 		a.dependencies.TonConnection,
 		a.storage,
+		a.egStorage,
+		a.dependencies.TonPriceService,
 		a.logger,
+		a.cfg.EG,
 	)
 
 	a.handler = handler.NewTransactionHandler(ctrl, a.logger)

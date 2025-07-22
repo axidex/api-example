@@ -10,9 +10,10 @@ import (
 type initFunc = func(context.Context) error
 
 type TransactionsDependencies struct {
-	DB            *gorm.DB
-	TonService    *ton.TransactionService
-	TonConnection *liteclient.ConnectionPool
+	DB              *gorm.DB
+	TonService      *ton.TransactionService
+	TonConnection   *liteclient.ConnectionPool
+	TonPriceService *ton.PriceServiceCoinGecko
 }
 
 func (d *TransactionsDependencies) Stop() {

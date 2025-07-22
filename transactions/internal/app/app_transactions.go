@@ -9,6 +9,7 @@ import (
 	"github.com/axidex/api-example/transactions/internal/handler"
 	"github.com/axidex/api-example/transactions/internal/provider"
 	"github.com/axidex/api-example/transactions/internal/storage"
+	"github.com/axidex/api-example/transactions/pkg/eg"
 	"github.com/oklog/run"
 
 	"syscall"
@@ -16,6 +17,7 @@ import (
 
 type TransactionsApp struct {
 	storage      *storage.AppStorage
+	egStorage    *eg.StorageGorm
 	telemetry    telemetry.Telemetry
 	dependencies *provider.TransactionsDependencies
 	cfg          *config.TransactionsConfig
@@ -55,6 +57,7 @@ func (a *TransactionsApp) init(ctx context.Context) error {
 		a.initLogger,
 		a.initDependencies,
 		a.initStorage,
+		a.initEg,
 		a.initHandler,
 	}
 

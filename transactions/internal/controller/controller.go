@@ -8,6 +8,7 @@ import (
 	"github.com/axidex/api-example/server/pkg/logger"
 	"github.com/axidex/api-example/transactions/internal/storage"
 	"github.com/axidex/api-example/transactions/internal/tables"
+	"github.com/axidex/api-example/transactions/pkg/eg"
 	"github.com/axidex/api-example/transactions/pkg/ton"
 	"github.com/xssnick/tonutils-go/liteclient"
 )
@@ -17,18 +18,24 @@ type Controller interface {
 }
 
 type TonController struct {
-	tonService ton.ITransactionService
-	conn       *liteclient.ConnectionPool
-	storage    *storage.AppStorage
-	logger     logger.Logger
+	tonService   ton.ITransactionService
+	conn         *liteclient.ConnectionPool
+	storage      *storage.AppStorage
+	egStorage    eg.Storage
+	priceService ton.PriceService
+	logger       logger.Logger
+	egAvailable  bool
 }
 
-func NewTonController(tonService ton.ITransactionService, conn *liteclient.ConnectionPool, storage *storage.AppStorage, logger logger.Logger) *TonController {
+func NewTonController(tonService ton.ITransactionService, conn *liteclient.ConnectionPool, storage *storage.AppStorage, egStorage eg.Storage, priceService ton.PriceService, logger logger.Logger, egAvailable bool) *TonController {
 	return &TonController{
-		conn:       conn,
-		tonService: tonService,
-		storage:    storage,
-		logger:     logger,
+		conn:         conn,
+		tonService:   tonService,
+		storage:      storage,
+		egStorage:    egStorage,
+		priceService: priceService,
+		logger:       logger,
+		egAvailable:  egAvailable,
 	}
 }
 
@@ -73,6 +80,12 @@ func (c *TonController) Start(ctx context.Context) error {
 func (c *TonController) saveTransaction(ctx context.Context, transaction ton.Transaction) error {
 	if err := c.storage.SaveTransaction(ctx, transaction); err != nil {
 		return err
+	}
+
+	if transaction.UserId != nil {
+		if err := c.egStorage.DepositToUser(ctx, *transaction.UserId, ton.NanoTonsToStars(transaction.Amount, c.priceService.GetPrice())); err != nil {
+			c.logger.Error(ctx, fmt.Sprintf("Failed to deposit to user: %s", err.Error()))
+		}
 	}
 
 	return nil

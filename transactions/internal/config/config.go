@@ -13,6 +13,7 @@ type TransactionsConfig struct {
 	Logger    logger.Config    `mapstructure:",squash"`
 	Database  db.Config        `mapstructure:",squash"`
 	Ton       ton.Config       `mapstructure:",squash"`
+	EG        bool             `mapstructure:"eg"`
 }
 
 type ApiConfig struct {

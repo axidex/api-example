@@ -2,12 +2,7 @@ name: Build Server Branch
 
 on:
   push:
-    branches: ['feature/**']
-    tags: ['*']
-    paths: ['server/**']
-  pull_request:
-    branches: ['feature/**']
-    paths: ['server/**']
+    branches: ['release/**']
   workflow_dispatch:
 
 jobs:
@@ -17,10 +12,13 @@ jobs:
       service_dir: 'server'
 
   build:
-    uses: ./.github/workflows/docker-build-branch.yml
+    needs: [ call-ci ]
+    uses: ./.github/workflows/docker-build-release.yml
     with:
       service_dir: 'server'
       docker_image_name: 'api-example-server'
+      create_tag: true
+      tag_prefix: 'v'
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

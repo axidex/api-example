@@ -11,7 +11,7 @@ var TransactionsLoggerModule = fx.Module("transactions-logger",
 	fx.Provide(NewTransactionsLogger),
 )
 
-var ApiLoggerModule = fx.Module("api-logger", 
+var ApiLoggerModule = fx.Module("api-logger",
 	fx.Provide(NewApiLogger),
 )
 

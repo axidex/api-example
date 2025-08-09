@@ -8,8 +8,8 @@ import (
 	"github.com/axidex/api-example/transactions/internal/controller"
 	"github.com/axidex/api-example/transactions/internal/handler"
 	"github.com/axidex/api-example/transactions/internal/storage"
-	internalTon "github.com/axidex/api-example/transactions/pkg/ton"
 	"github.com/axidex/api-example/transactions/pkg/eg"
+	internalTon "github.com/axidex/api-example/transactions/pkg/ton"
 	"github.com/xssnick/tonutils-go/liteclient"
 	"go.uber.org/fx"
 )

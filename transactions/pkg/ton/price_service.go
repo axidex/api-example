@@ -34,7 +34,7 @@ func NewPriceService(ctx context.Context, logger logger.Logger) (*PriceServiceCo
 	if err != nil {
 		return nil, err
 	}
-	
+
 	service.usdPrice = basePrice
 
 	return service, nil
